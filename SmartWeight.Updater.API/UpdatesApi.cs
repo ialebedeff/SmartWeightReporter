@@ -2,12 +2,12 @@
 
 namespace SmartWeight.Updater.API
 {
-    public class UpdatesApi : HttpClientBase
+    /// <summary>
+    /// Апи для работы с обновлениями
+    /// </summary>
+    public class UpdatesApi : RestApiClientBase
     {
-        public UpdatesApi(HttpClient httpClient) : base(httpClient)
-        {
-
-        }
+        public UpdatesApi(HttpClient httpClient) : base(httpClient) { }
         /// <summary>
         /// Получить информацию по сборке
         /// </summary>

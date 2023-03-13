@@ -1,8 +1,11 @@
 ﻿namespace SmartWeight.Updater.API
 {
-    public class SmartWeightApi
+    /// <summary>
+    /// 
+    /// </summary>
+    public class RestApiClients
     {
-        public SmartWeightApi(HttpClient serverClient, HttpClient serviceClient)
+        public RestApiClients(HttpClient serverClient, HttpClient serviceClient)
         {
             Server = new ServerApi(serverClient);
             Service = new ServiceApi(serviceClient);

@@ -2,35 +2,9 @@
 
 namespace SmartWeight.Updater.API
 {
-    public class JenkinsApi : HttpClientBase
-    { 
-        public JenkinsApi(HttpClient httpClient) : base(httpClient) 
-        {
-        }
-        /// <summary>
-        /// Поиск работ в Jenkins. Используется как получение списка всех заводов
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public Task<IEnumerable<string>?> SearchJobsAsync(string? query = "")
-            => GetAsync<IEnumerable<string>>($"api/jenkins/SearchJobs?query={query}");
-    }
-    public class UserApi : HttpClientBase
+    public class FactoryApi : RestApiClientBase
     {
-        public UserApi(HttpClient httpClient) : base(httpClient)
-        {
-        }
-
-        public Task<IEnumerable<User>?> SearchAsync(string? query = null)
-            => query is null ? 
-                GetAsync<IEnumerable<User>>($"api/user/GetAllUsers") : 
-                GetAsync<IEnumerable<User>>($"api/user/Search?query={query}");
-    }
-    public class FactoryApi : HttpClientBase
-    {
-        public FactoryApi(HttpClient httpClient) : base(httpClient)
-        {
-        }
+        public FactoryApi(HttpClient httpClient) : base(httpClient) { }
         /// <summary>
         /// Создать учётную запись для завода
         /// </summary>
@@ -48,12 +22,11 @@ namespace SmartWeight.Updater.API
             bool isUpdatesEnabled = true)
             => PostAsync<CreateFactoryUserRequest, OperationResult>("api/user/CreateUser", new CreateFactoryUserRequest()
             {
-                Email = email,
-                IsUpdateEnabled =
-                isUpdatesEnabled,
-                Password = password,
-                Factories = factories,
-                UserName = userName
+                  Email = email
+                , IsUpdateEnabled = isUpdatesEnabled
+                , Password = password
+                , Factories = factories
+                , UserName = userName
             });
         /// <summary>
         /// Получить производство, под которым выполнен вход
@@ -61,6 +34,10 @@ namespace SmartWeight.Updater.API
         /// <returns></returns>
         public Task<Factory?> GetCurrentFactoryAsync()
             => GetAsync<Factory>("api/factory/GetCurrentFactory");
+        /// <summary>
+        /// Получить производства пользователя под которым выполнен вход
+        /// </summary>
+        /// <returns></returns>
         public Task<IEnumerable<Factory>?> GetCurrentUserFactoriesAsync()
             => GetAsync<IEnumerable<Factory>>("api/factory/GetCurrentUserFactories");
         /// <summary>

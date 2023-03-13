@@ -5,9 +5,9 @@ namespace SmartWeight.Admin.Client.Pages.Factories
 {
     public class AuthStateProvider : AuthenticationStateProvider
     {
-        private readonly SmartWeightApi _updaterApi;
+        private readonly RestApiClients _updaterApi;
         public AuthStateProvider(
-            SmartWeightApi updaterApi)
+            RestApiClients updaterApi)
         {
             _updaterApi = updaterApi;
         }

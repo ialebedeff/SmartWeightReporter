@@ -1,5 +1,8 @@
 ﻿namespace SmartWeight.Updater.API
 {
+    /// <summary>
+    /// Сервисное API
+    /// </summary>
     public class ServiceApi
     {
         public ServiceApi(HttpClient httpClient)

@@ -27,7 +27,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMudServices();
 //builder.Services.AddSingleton<SmartWeightApi>(api => new SmartWeightApi("https://localhost:7274/", new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) }));
 
-builder.Services.AddScoped<SmartWeightApi>(api => new SmartWeightApi(new HttpClient()
+builder.Services.AddScoped<RestApiClients>(api => new RestApiClients(new HttpClient()
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 }, null));

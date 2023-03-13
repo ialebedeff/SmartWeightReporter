@@ -2,11 +2,12 @@
 
 namespace SmartWeight.Updater.API
 {
-    public class NoteApi : HttpClientBase
+    /// <summary>
+    /// Апи для взаимодействия с заметками
+    /// </summary>
+    public class NoteApi : RestApiClientBase
     {
-        public NoteApi(HttpClient httpClient) : base(httpClient)
-        {
-        }
+        public NoteApi(HttpClient httpClient) : base(httpClient) { }
         /// <summary>
         /// Получить заметки по объекту
         /// </summary>

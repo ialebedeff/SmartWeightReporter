@@ -1,10 +1,11 @@
 ﻿namespace SmartWeight.Updater.API
 {
-    public class ProcessApi : HttpClientBase
+    /// <summary>
+    /// Апи для взаимодействия с процессами
+    /// </summary>
+    public class ProcessApi : RestApiClientBase
     {
-        public ProcessApi(HttpClient httpClient) : base(httpClient)
-        {
-        }
+        public ProcessApi(HttpClient httpClient) : base(httpClient) { }
         /// <summary>
         /// Завершить процесс по Идентификатору
         /// </summary>

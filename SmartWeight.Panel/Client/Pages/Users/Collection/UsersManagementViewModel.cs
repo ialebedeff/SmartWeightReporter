@@ -14,7 +14,7 @@ namespace SmartWeight.Panel.Client.Pages.Users.Collection
 {
     public class UsersManagementViewModel : ViewModelBase
     {
-        public UsersManagementViewModel(SearchViewModel<User> searchViewModel, ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public UsersManagementViewModel(SearchViewModel<User> searchViewModel, ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, RestApiClients updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
         {
             Search = searchViewModel;
             Search.SearchFunction = query => updaterApi.Server.User.SearchAsync(query);

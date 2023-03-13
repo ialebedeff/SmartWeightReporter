@@ -15,7 +15,20 @@ namespace SmartWeight.Panel.Client.Shared.ViewModels
 {
     public class AuthorizedDashboardViewModel : ViewModelBase, IActivatableViewModel
     {
-        public AuthorizedDashboardViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public AuthorizedDashboardViewModel(ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             ConnectionCommand.Execute();
 
@@ -30,6 +43,10 @@ namespace SmartWeight.Panel.Client.Shared.ViewModels
         /// Активатор вью модели
         /// </summary>
         public ViewModelActivator Activator { get; set; } = new ViewModelActivator();
+        /// <summary>
+        /// Оповещение об отключении / подключении сервиса клиента
+        /// </summary>
+        /// <param name="connectionStateChangeds"></param>
         private void NotifyOnConnectionClientsChanged(ObservableCollectionExtended<ConnectionStateChanged> connectionStateChangeds)
         {
             if (connectionStateChangeds is null) return;

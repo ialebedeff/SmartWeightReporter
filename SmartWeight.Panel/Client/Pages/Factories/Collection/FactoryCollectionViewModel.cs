@@ -17,15 +17,22 @@ namespace SmartWeight.Admin.Client.Pages.Factories
     public class FactoryCollectionViewModel : ViewModelBase
     {
         public FactoryCollectionViewModel(
-            ApplicationState applicationState,
-            ISnackbar snackbar,
-            IDialogService dialog,
-            SmartWeightApi updaterApi,
-            NavigationManager navigation,
-            SearchViewModel<Factory> searchViewModel,
-            CommunicationService<ServerConfiguration> communicationService, 
-            DatabaseMessageFactory databaseMessageFactory) :
-            base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+              ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , SearchViewModel<Factory> searchViewModel
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(
+                    applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             Search = searchViewModel;
             Search.SearchFunction = query => updaterApi.Server.Factory.Search(query);

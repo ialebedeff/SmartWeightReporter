@@ -14,14 +14,21 @@ namespace SmartWeight.Panel.Client.Dialogs
     public class CreateFactoryDialogViewModel : ViewModelBase, IActivatableViewModel
     {
         public CreateFactoryDialogViewModel(
-            ApplicationState applicationState,
-            ISnackbar snackbar,
-            IDialogService dialog,
-            SmartWeightApi updaterApi,
-            NavigationManager navigation,
-            CommunicationService<ServerConfiguration> communicationService, 
-            DatabaseMessageFactory databaseMessageFactory) :
-            base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+              ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            ,  DatabaseMessageFactory databaseMessageFactory)
+            : base(
+                    applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             AddFactoryCommand = ReactiveCommand.Create(AddFactory);
             RemoveFactoryCommand = ReactiveCommand.Create<FactoryDto>(RemoveFactory);
@@ -75,7 +82,7 @@ namespace SmartWeight.Panel.Client.Dialogs
         {
             try
             {
-                var result = await ApiClient.Server.Factory.CreateAsync(
+                var result = await ApiClients.Server.Factory.CreateAsync(
                     Email,
                     UserName,
                     Password,
@@ -112,6 +119,6 @@ namespace SmartWeight.Panel.Client.Dialogs
         /// <param name="query"></param>
         /// <returns></returns>
         public Task<IEnumerable<string>?> SearchAsync(string? query = "")
-            => ApiClient.Server.Jenkins.SearchJobsAsync(query);
+            => ApiClients.Server.Jenkins.SearchJobsAsync(query);
     }
 }

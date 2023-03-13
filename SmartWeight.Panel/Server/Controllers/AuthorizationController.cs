@@ -5,10 +5,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace SmartWeight.Panel.Server.Controllers
 {
+    /// <summary>
+    /// Контроллер для авторизации / аутентификации клиента
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class AuthorizationController : ControllerBase
@@ -19,12 +21,11 @@ namespace SmartWeight.Panel.Server.Controllers
         private readonly FactoryManager _factoryManager;
 
         private readonly IMapper _mapper;
-        public AuthorizationController(
-            IMapper mapper,
-            FactoryManager factoryManager,
-            SignInManager<User> signInManager,
-            UserManager<User> userManager,
-            RoleManager<Role> roleManager)
+        public AuthorizationController(IMapper mapper
+            , FactoryManager factoryManager
+            , SignInManager<User> signInManager
+            , UserManager<User> userManager
+            , RoleManager<Role> roleManager)
         {
             _mapper = mapper;
 
@@ -34,6 +35,11 @@ namespace SmartWeight.Panel.Server.Controllers
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        /// Выполнить вход в аккаунт
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("SignIn")]
         public async Task<OperationResult> SignInAsync(LoginRequest request)
         {
@@ -58,13 +64,23 @@ namespace SmartWeight.Panel.Server.Controllers
 
             return OperationResult.Failed("Не верный логин или пароль");
         }
-
+        /// <summary>
+        /// Выход из аккаунта
+        /// </summary>
+        /// <returns></returns>
         [Authorize]
         [HttpPost("SignOut")]
         public Task SignOutAsync() => _signInManager.SignOutAsync();
-
+        /// <summary>
+        /// Получить состояние авторизации
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("AuthorizationState")]
         public bool AuthorizationState() => _signInManager.IsSignedIn(User);
+        /// <summary>
+        /// Получить состояние аутентификации
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("GetAuthenticationState")]
         public AuthenticationData GetAuthenticationState()
             => new AuthenticationData(new IdentityData(User));

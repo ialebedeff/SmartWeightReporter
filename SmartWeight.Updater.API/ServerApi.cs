@@ -1,7 +1,8 @@
-﻿using System.Net;
-
-namespace SmartWeight.Updater.API
+﻿namespace SmartWeight.Updater.API
 {
+    /// <summary>
+    /// Серверное API
+    /// </summary>
     public class ServerApi
     {
         public ServerApi(HttpClient httpClient)

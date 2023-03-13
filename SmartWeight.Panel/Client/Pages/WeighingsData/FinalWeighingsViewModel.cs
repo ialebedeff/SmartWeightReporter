@@ -7,32 +7,34 @@ using Entities.Database;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using ReactiveUI;
-using SmartWeight.Panel.Client.Components;
 using SmartWeight.Panel.Client.Pages.Login;
 using SmartWeight.Updater.API;
-using System.Diagnostics.CodeAnalysis;
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Security.Cryptography.X509Certificates;
-using static System.Reflection.Metadata.BlobBuilder;
 
 namespace SmartWeight.Panel.Client.Pages.WeighingsData
 {
     public class FinalWeighingsViewModel : FilterableViewModel, IActivatableViewModel
     {
         public FinalWeighingsViewModel(
-            Filter filter,
-            ApplicationState applicationState,
-            ISnackbar snackbar,
-            IDialogService dialog,
-            SmartWeightApi updaterApi,
-            NavigationManager navigation,
-            CommunicationService<ServerConfiguration> communicationService,
-            DatabaseMessageFactory databaseMessageFactory) : base(filter, applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+              Filter filter
+            , ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(filter
+                  , applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             Activator = new ViewModelActivator();
-            Weighings = new ObservableCollectionExtended<Weighings>();
-
             LoadWeighingsCommand = ReactiveCommand.CreateFromTask(LoadDataByFilterAsync);
             LoadCurrentFactoryCommand = ReactiveCommand.CreateFromTask(LoadCurrentFactoryAsync);
 
@@ -56,33 +58,63 @@ namespace SmartWeight.Panel.Client.Pages.WeighingsData
                         .DisposeWith(disposables);
             });
         }
-
-        public ViewModelActivator Activator { get; }
+        /// <summary>
+        /// Активатор вью модели
+        /// </summary>
+        public ViewModelActivator Activator { get; set; } = new();
+        /// <summary>
+        /// Загрузить текущее производство
+        /// </summary>
         public ReactiveCommand<Unit, Unit> LoadCurrentFactoryCommand { get; set; }
+        /// <summary>
+        /// Загрузить информацию по взвешиваниям
+        /// </summary>
         public ReactiveCommand<Unit, Unit> LoadWeighingsCommand { get; set; }
-
+        /// <summary>
+        /// Производство
+        /// </summary>
         private Factory? _factory;
+        /// <summary>
+        /// Производство
+        /// </summary>
         public Factory? Factory
         {
             get { return _factory; }
             set { this.RaiseAndSetIfChanged(ref _factory, value); }
         }
-
-        [AllowNull] private ObservableCollectionExtended<Weighings> _weighings;
+        /// <summary>
+        /// Информация по взвешивания
+        /// </summary>
+        private ObservableCollectionExtended<Weighings> _weighings = new();
+        /// <summary>
+        /// Информация по звешиваниям
+        /// </summary>
         public ObservableCollectionExtended<Weighings> Weighings
         {
             get { return _weighings; }
             set { this.RaiseAndSetIfChanged(ref _weighings, value); }
         }
+        /// <summary>
+        /// Загрузка текущего производства
+        /// </summary>
+        /// <returns></returns>
         public async Task LoadCurrentFactoryAsync()
         {
-            ApplicationState.CurrentFactory = await ApiClient.Server.Factory.GetCurrentFactoryAsync();
+            ApplicationState.CurrentFactory = await ApiClients.Server.Factory.GetCurrentFactoryAsync();
             Factory = ApplicationState.CurrentFactory;
         }
+        /// <summary>
+        /// Вывод ошибки при загрузке
+        /// </summary>
+        /// <param name="exception"></param>
         public void OnLoadFailure(Exception exception)
         {
             Snackbar.Add(exception.Message);
         }
+        /// <summary>
+        /// Загрузить информацию по фильру
+        /// </summary>
+        /// <returns></returns>
         public override async Task LoadDataByFilterAsync()
         {
             if (Factory is not null)
@@ -91,7 +123,10 @@ namespace SmartWeight.Panel.Client.Pages.WeighingsData
                 await CommunicationService.Messages.Database.Weighings.SendMessageAsync(message);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="weighings"></param>
         private void OnResultsChanged(ObservableCollectionExtended<Weighings> weighings)
         {
             Weighings.Clear();

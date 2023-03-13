@@ -15,11 +15,28 @@ namespace SmartWeight.Panel.Client.Components
 {
     public class NoteAreaViewModel : ViewModelBase, IActivatableViewModel
     {
-        public NoteAreaViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public NoteAreaViewModel(
+              ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
+            #region Инициализация команд
             CreateNoteCommand = ReactiveCommand.CreateFromTask(CreateNoteAsync);
-            LoadNotesCommand = ReactiveCommand.CreateFromTask<int, IEnumerable<Note>?>(factoryId => updaterApi.Server.Note.GetNotesAsync(factoryId, 0, 20));
-
+            LoadNotesCommand = ReactiveCommand.CreateFromTask<int, IEnumerable<Note>?>(
+                factoryId => updaterApi.Server.Note.GetNotesAsync(factoryId, 0, 20));
+            #endregion
+            #region Настраиваем IDisposable объекты на уничтожение вместе с ViewModel
             this.WhenActivated(disposables =>
             {
                 LoadNotesCommand
@@ -27,12 +44,13 @@ namespace SmartWeight.Panel.Client.Components
                     .Subscribe(result =>
                     {
                         Notes = new ObservableCollection<Note>(result);
-                    });
+                    })
+                    .DisposeWith(disposables);
                 CreateNoteCommand
                     .Subscribe(OnCreateNoteRequested)
                     .DisposeWith(disposables);
-
             });
+            #endregion
         }
         /// <summary>
         /// Команда для создания заметки
@@ -74,7 +92,7 @@ namespace SmartWeight.Panel.Client.Components
         private async Task<OperationResult<Note>?> CreateNoteAsync()
         {
             var request = new CreateNoteRequest(FactoryId, Text);
-            var result = await ApiClient.Server.Note.CreateNoteAsync(request);
+            var result = await ApiClients.Server.Note.CreateNoteAsync(request);
 
             return result;
         }

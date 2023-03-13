@@ -23,7 +23,7 @@ namespace SmartWeight.Panel.Client.Pages.Charts
             ApplicationState applicationState,
             ISnackbar snackbar,
             IDialogService dialog,
-            SmartWeightApi updaterApi,
+            RestApiClients updaterApi,
             NavigationManager navigation,
             CommunicationService<ServerConfiguration> communicationService,
             DatabaseMessageFactory databaseMessageFactory) : base(filter, applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)

@@ -12,15 +12,21 @@ namespace SmartWeight.Panel.Client.Pages.Login;
 
 public class FilterableViewModel : ViewModelBase
 {
-    public FilterableViewModel(
-        Filter filter,
-        ApplicationState applicationState, 
-        ISnackbar snackbar, 
-        IDialogService dialog,
-        SmartWeightApi updaterApi, 
-        NavigationManager navigation, 
-        CommunicationService<ServerConfiguration> communicationService, 
-        DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+    public FilterableViewModel(Filter filter
+        , ApplicationState applicationState
+        , ISnackbar snackbar
+        , IDialogService dialog
+        , RestApiClients updaterApi
+        , NavigationManager navigation
+        , CommunicationService<ServerConfiguration> communicationService
+        , DatabaseMessageFactory databaseMessageFactory) 
+        : base(applicationState
+            , snackbar
+            , dialog
+            , updaterApi
+            , navigation
+            , communicationService
+            , databaseMessageFactory)
     {
         Filter = filter;
         LoadDataByFilterCommand = ReactiveCommand.CreateFromTask(LoadDataByFilterAsync);

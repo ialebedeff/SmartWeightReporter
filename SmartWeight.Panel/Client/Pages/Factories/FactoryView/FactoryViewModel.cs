@@ -15,21 +15,21 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactoryView
 
     public class FactoryViewModel : ViewModelBase
     {
-        public FactoryViewModel
-            (ApplicationState applicationState, 
-            ISnackbar snackbar,
-            IDialogService dialog,
-            SmartWeightApi updaterApi,
-            NavigationManager navigation,
-            CommunicationService<ServerConfiguration> communicationService,
-            DatabaseMessageFactory databaseMessageFactory) :
-            base(applicationState, 
-                snackbar,
-                dialog,
-                updaterApi,
-                navigation,
-                communicationService,
-                databaseMessageFactory)
+        public FactoryViewModel(
+              ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             LoadFactoryCommand = ReactiveCommand.CreateFromTask<int, Factory?>(GetFactoryAsync);
 
@@ -39,10 +39,6 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactoryView
         }
 
         public int FactoryId { get; set; }
-        /// <summary>
-        /// Database connection by current factory
-        /// </summary>
-        public DatabaseConnection DatabaseConnection { get; set; }
         /// <summary>
         /// Get information about factory
         /// </summary>
@@ -78,7 +74,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactoryView
         /// <returns></returns>
         public Task<Factory?> GetFactoryAsync(int factoryId)
         { 
-            return ApiClient.Server.Factory.FindAsync(factoryId);
+            return ApiClients.Server.Factory.FindAsync(factoryId);
         }
     }
 }

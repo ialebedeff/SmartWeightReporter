@@ -1,7 +1,6 @@
 using AutoMapper;
 using Database;
 using Entities;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 using SmartWeight.Panel.Server.Controllers;
 

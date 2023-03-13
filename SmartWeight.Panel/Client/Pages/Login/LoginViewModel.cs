@@ -14,21 +14,21 @@ namespace SmartWeight.Panel.Client.Pages.Login
     {
         private readonly AuthenticationStateProvider _authenticationState;
         public LoginViewModel(
-            ApplicationState applicationState,
-            ISnackbar snackbar,
-            IDialogService dialog,
-            SmartWeightApi updaterApi,
-            NavigationManager navigation,
-            AuthenticationStateProvider authenticationStateProvider,
-            CommunicationService<ServerConfiguration> communicationService,
-            DatabaseMessageFactory databaseMessageFactory) : base(
-                applicationState,
-                snackbar,
-                dialog,
-                updaterApi,
-                navigation,
-                communicationService,
-                databaseMessageFactory)
+              ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , AuthenticationStateProvider authenticationStateProvider
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(applicationState
+                  , snackbar
+                  , dialog
+                  , updaterApi
+                  , navigation
+                  , communicationService
+                  , databaseMessageFactory)
         {
             _authenticationState = authenticationStateProvider;
 
@@ -46,14 +46,10 @@ namespace SmartWeight.Panel.Client.Pages.Login
         /// </summary>
         public ReactiveCommand<Unit, Unit> LoginCommand { get; set; }
         /// <summary>
-        /// Команда для получения AuthenticationState пользователя
-        /// </summary>
-        public ReactiveCommand<Unit, AuthenticationState> AuthStateCommand { get; set; }
-        /// <summary>
         /// Авторизоваться
         /// </summary>
         /// <returns></returns>
-        public Task LoginAsync() => ApiClient.Server.Authorization
+        public Task LoginAsync() => ApiClients.Server.Authorization
                    .SignInAsync(Login, Password);
         /// <summary>
         /// Логин / Юзернейм

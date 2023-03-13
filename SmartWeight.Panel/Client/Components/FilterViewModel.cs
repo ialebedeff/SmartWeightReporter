@@ -16,8 +16,22 @@ namespace SmartWeight.Panel.Client.Components
     /// </summary>
     public class FilterViewModel : ViewModelBase
     {
-        public FilterViewModel(Filter filter,
-            ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public FilterViewModel(
+              Filter filter
+            , ApplicationState applicationState
+            , ISnackbar snackbar
+            , IDialogService dialog
+            , RestApiClients updaterApi
+            , NavigationManager navigation
+            , CommunicationService<ServerConfiguration> communicationService
+            , DatabaseMessageFactory databaseMessageFactory) 
+            : base(applicationState
+            , snackbar
+            , dialog
+            , updaterApi
+            , navigation
+            , communicationService
+            , databaseMessageFactory)
         {
             Filter = filter;
             ClearFilterCommand = ReactiveCommand.Create(ClearFilter);
@@ -29,11 +43,11 @@ namespace SmartWeight.Panel.Client.Components
         /// <summary>
         /// Команда для очистки фильтра
         /// </summary>
-        public ReactiveCommand<Unit, Unit> ClearFilterCommand { get; set; }
+        public ReactiveCommand<Unit, Unit>? ClearFilterCommand { get; set; }
         /// <summary>
         /// Команда для загрузки данные по фильтру
         /// </summary>
-        public ReactiveCommand<Unit, Unit> ReloadFilterCommand { get; set; }
+        public ReactiveCommand<Unit, Unit>? ReloadFilterCommand { get; set; }
         /// <summary>
         /// Очистка фильтра
         /// </summary>

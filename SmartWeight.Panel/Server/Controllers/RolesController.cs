@@ -1,13 +1,16 @@
-﻿using AutoMapper;
-using Entities;
+﻿using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SmartWeight.Panel.Server.Controllers
 {
+    /// <summary>
+    /// API контроллер для взаимодействия с ролями
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "Admin")]
     public class RolesController : ControllerBase
     {
         private RoleManager<Role> _roleManager;
@@ -15,25 +18,31 @@ namespace SmartWeight.Panel.Server.Controllers
         { 
             _roleManager= roleManager;
         }
-
-        [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Создать роль
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         [HttpPost("CreateRole")]
         public Task<IdentityResult> CreateRoleAsync(string roleName)
             => _roleManager.CreateAsync(new Role() { Name = roleName });
-
-        [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Удалить роль
+        /// </summary>
+        /// <param name="roleName"></param>
+        /// <returns></returns>
         [HttpDelete("DeleteRole")]
         public async Task<IdentityResult> DeleteRoleAsync(string roleName)
         {
-            if (await _roleManager.FindByNameAsync(roleName) is Role role)
-            { 
-                return await _roleManager.DeleteAsync(role);
-            }
+            var role = await _roleManager.FindByNameAsync(roleName);
+            var result = await _roleManager.DeleteAsync(role);
 
-            return IdentityResult.Failed();
+            return result;
         }
-
-        [Authorize(Roles = "Admin")]
+        /// <summary>
+        /// Получить роли
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("GetAllRoles")]
         public IQueryable<Role> GetRoles()
             => _roleManager.Roles;

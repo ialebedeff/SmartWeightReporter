@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SmartWeight.Panel.Server.Controllers
 {
+    /// <summary>
+    /// API для взаимодействия с пользователями
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
@@ -23,7 +26,7 @@ namespace SmartWeight.Panel.Server.Controllers
             _mapper = mapper;
         }
         /// <summary>
-        /// 
+        /// Создать пользователя
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
@@ -41,7 +44,7 @@ namespace SmartWeight.Panel.Server.Controllers
             return OperationResult.FromIdentityResult(result);
         }
         /// <summary>
-        /// 
+        /// Обновить пользователя
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -51,7 +54,7 @@ namespace SmartWeight.Panel.Server.Controllers
             User user)
             => _userManager.UpdateAsync(user);
         /// <summary>
-        /// 
+        /// Удалить пользователя
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -60,7 +63,7 @@ namespace SmartWeight.Panel.Server.Controllers
         public Task<IdentityResult> DeleteUserAsync(User user)
             => _userManager.DeleteAsync(user);
         /// <summary>
-        /// 
+        /// Получить список всех пользователей
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
@@ -68,13 +71,20 @@ namespace SmartWeight.Panel.Server.Controllers
         public IQueryable<User> GetUsers()
             => _userManager.Users;
         /// <summary>
-        /// 
+        /// Получить информацию по текущему пользователю
         /// </summary>
         /// <returns></returns>
         [HttpGet("GetCurrentUser")]
         public Task<User?> GetCurrentUser()
             => _userManager.GetUserAsync(User);
-
+        /// <summary>
+        /// Поиск пользователя по: 
+        /// Почтовому адресу, 
+        /// Номеру телефона, 
+        /// Юзернейму / Логину
+        /// </summary>
+        /// <param name="query"></param>
+        /// <returns></returns>
         [HttpGet("Search")]
         [Authorize(Roles = "Admin")]
         public IEnumerable<User> SearchAsync(string? query = "")

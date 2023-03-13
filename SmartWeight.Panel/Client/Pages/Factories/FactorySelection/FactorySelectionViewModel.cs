@@ -17,7 +17,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
 {
     public class FactorySelectionViewModel : ViewModelBase, IActivatableViewModel
     {
-        public FactorySelectionViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public FactorySelectionViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, RestApiClients updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
         {
             LoadCurrentUserFactoriesCommand = ReactiveCommand.CreateFromTask(_ => LoadCurrentUserFactoriesAsync());
             LoadConnectedClientsCommand = ReactiveCommand.CreateFromTask(_ => RequestToConnectedClientsAsync());
@@ -112,7 +112,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
         /// </summary>
         /// <returns></returns>
         private Task<IEnumerable<Factory>?> LoadCurrentUserFactoriesAsync()
-            => ApiClient.Server.Factory.GetCurrentUserFactoriesAsync();
+            => ApiClients.Server.Factory.GetCurrentUserFactoriesAsync();
         /// <summary>
         /// 
         /// </summary>

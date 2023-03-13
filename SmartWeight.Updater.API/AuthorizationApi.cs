@@ -5,70 +5,65 @@ using System.Security.Claims;
 
 namespace SmartWeight.Updater.API
 {
-    public class AuthorizationApi : HttpClientBase
+    /// <summary>
+    /// Api для авторизации на сервере
+    /// </summary>
+    public class AuthorizationApi : RestApiClientBase
     {
-        public AuthorizationApi(HttpClient httpClient) : base(httpClient)
-        {
-        }
-
+        public AuthorizationApi(HttpClient httpClient) : base(httpClient) { }
+        /// <summary>
+        /// Авторизация
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
         public async Task SignInAsync(string login, string password)
         {
             try
             {
-                var response = await PostAsync<LoginRequest, OperationResult>("api/authorization/signin", new LoginRequest()
-                {
-                    Login = login,
-                    Password = password
-                });
+                var request = new LoginRequest(login, password);
+                var response = await PostAsync<LoginRequest, OperationResult>("api/authorization/signin", request);
 
-                if (response?.Succeed == true)
-                {
-                    AuthorizationStateChanged?.Invoke(this, new AuthorizationState() { IsAuthorized = true });
-                }
-                else
-                {
-                    throw new ApiException("Не верный логин или пароль.");
-                }
+                ArgumentNullException.ThrowIfNull(response);
+                ApiException.ThrowIfFalse(response.Succeed, "Не верный логин или пароль");
+
+                AuthorizationStateChanged?.Invoke(this, new AuthorizationState() { IsAuthorized = true });
             }
-            catch
-            {
-                throw;
-            }
+            catch (Exception) { throw; }
         }
-
-        public Task<bool> IsAuthorizedAsync()
-        {
-            try
-            {
-                return GetAsync<bool>("api/authorization/AuthorizationState");
-            }
-            catch { throw; }
-        }
-
+        /// <summary>
+        /// Получить AuthenticationState пользователя
+        /// </summary>
+        /// <returns></returns>
         public async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
                 var result = await GetAsync<AuthenticationData>("api/Authorization/GetAuthenticationState");
+                
+                ArgumentNullException.ThrowIfNull(result);
 
-                if (result is not null)
-                {
-                    var identity = new ClaimsIdentity(result.User.Claims
-                        .Select(c => new Claim(c.Type, c.Value, c.ValueType, c.Issuer, c.OriginalIssuer)),
-                        result.User.AuthenticationType);
-                    var principal = new ClaimsPrincipal(identity);
+                var identity = new ClaimsIdentity(result.User.Claims
+                    .Select(c => new Claim(
+                          type: c.Type
+                        , value: c.Value
+                        , valueType: c.ValueType
+                        , issuer: c.Issuer
+                        , originalIssuer: c.OriginalIssuer))
+                        , authenticationType: result.User.AuthenticationType);
 
-                    return new AuthenticationState(principal);
-                }
+                var principal = new ClaimsPrincipal(identity);
+
+                return new AuthenticationState(principal);
+
             }
-            catch
-            {
-
-            }
-
-            return new AuthenticationState(new ClaimsPrincipal());
+            catch (Exception) { throw; }
         }
 
+        /// <summary>
+        /// Выход из аккаунта
+        /// </summary>
+        /// <returns></returns>
         public async Task SignOutAsync()
         {
             try
@@ -76,9 +71,12 @@ namespace SmartWeight.Updater.API
                 await PostAsync("api/authorization/signout");
                 AuthorizationStateChanged?.Invoke(this, new AuthorizationState() { IsAuthorized = false });
             }
-            catch { }
+            catch (Exception) { throw; }
         }
 
+        /// <summary>
+        /// Ивент на состояние авторизации пользователя
+        /// </summary>
         public event EventHandler<AuthorizationState>? AuthorizationStateChanged;
     }
 }

@@ -14,7 +14,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
 {
     public class FactoryCardViewModel : ViewModelBase, IActivatableViewModel
     {
-        public FactoryCardViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, SmartWeightApi updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
+        public FactoryCardViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, RestApiClients updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
         {
             SelectFactoryCommand = ReactiveCommand.Create<Factory>(factory =>
             {
@@ -24,9 +24,6 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
 
             this.WhenActivated(disposables =>
             {
-                //this.WhenAnyValue(x => x.ApplicationState.CurrentFactory)
-                //    .Subscribe(_ => this.RaisePropertyChanged(nameof(IsSelectionDisabled)))
-                //    .DisposeWith(disposables);
                 this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)
                     .Subscribe(_ => this.RaisePropertyChanged(nameof(IsOnline)))
                     .DisposeWith(disposables);

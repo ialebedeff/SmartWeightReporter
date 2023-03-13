@@ -8,33 +8,46 @@ namespace SmartWeight.Panel.Client
     public class ApplicationState : ReactiveObject
     {
         private Factory? _currentFactory;
+        /// <summary>
+        /// Текущее производство
+        /// </summary>
         public Factory? CurrentFactory
         {
             get { return _currentFactory; }
             set { this.RaiseAndSetIfChanged(ref _currentFactory, value); }
         }
-        
         private User? _currentUser;
+        /// <summary>
+        /// Текущий пользователь
+        /// </summary>
         public User? CurrentUser
         {
             get { return _currentUser; }
             set { this.RaiseAndSetIfChanged(ref _currentUser, value); }
         }
-
         private AuthenticationState? _authenticationState;
+        /// <summary>
+        /// Состояние аутентификации
+        /// </summary>
         public AuthenticationState? AuthenticationState
         {
             get { return _authenticationState; }
             set { this.RaiseAndSetIfChanged(ref _authenticationState, value); }
         }
-
         private ObservableCollectionExtended<HubClient> _connectedClients = new();
+        /// <summary>
+        /// Подключенные производства 
+        /// текущего аккаунта
+        /// </summary>
         public ObservableCollectionExtended<HubClient> ConnectedClients
         {
             get { return _connectedClients; }
             set { this.RaiseAndSetIfChanged(ref _connectedClients, value); }
         }
-
+        /// <summary>
+        /// Добавить клиента / производство к подключенным клиентам
+        /// </summary>
+        /// <param name="hubClient"></param>
         public void AddClient(HubClient hubClient)
         {
             if (hubClient.IsFactoryUser)
@@ -44,6 +57,10 @@ namespace SmartWeight.Panel.Client
                 this.RaisePropertyChanged(nameof(IsCurrentFactoryOnline));
             }
         }
+        /// <summary>
+        /// Удалить клиента / производство из подключенных клиентов
+        /// </summary>
+        /// <param name="hubClient"></param>
         public void RemoveClient(HubClient hubClient)
         {
             if (hubClient.IsFactoryUser)
@@ -55,7 +72,10 @@ namespace SmartWeight.Panel.Client
                 this.RaisePropertyChanged(nameof(IsCurrentFactoryOnline));
             }
         }
-
+        /// <summary>
+        /// Свойство отображает состояние в 
+        /// сети текущего производства
+        /// </summary>
         public bool IsCurrentFactoryOnline
         {
             get 

@@ -29,5 +29,9 @@
     <ProjectReference Include="..\Client\SmartWeight.Panel.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Hubs\" />
+  </ItemGroup>
+
 
 </Project>

@@ -1,11 +1,16 @@
 ﻿using AutoMapper;
 using Database;
 using Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SmartWeight.Panel.Server.Controllers
 {
+    /// <summary>
+    /// API контроллер для взаимодействия с заметками
+    /// </summary>
     [ApiController]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     public class NoteController : ControllerBase
     {
@@ -19,14 +24,14 @@ namespace SmartWeight.Panel.Server.Controllers
             _noteManager = noteManager;
         }
         /// <summary>
-        /// 
+        /// Удалить заметку
         /// </summary>
         /// <param name="noteId"></param>
         /// <returns></returns>
         [HttpDelete("DeleteNote")]
-        public async Task DeleteAsync(int noteId)
+        public Task DeleteAsync(int noteId)
         {
-
+            throw new NotImplementedException();
         }
         /// <summary>
         /// 

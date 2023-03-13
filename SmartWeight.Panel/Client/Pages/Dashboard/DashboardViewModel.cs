@@ -22,7 +22,7 @@ public class DashboardViewModel : ViewModelBase
         ApplicationState applicationState,
         ISnackbar snackbar,
         IDialogService dialog, 
-        SmartWeightApi updaterApi, 
+        RestApiClients updaterApi, 
         NavigationManager navigation, 
         CommunicationService<ServerConfiguration> communicationService, 
         DatabaseMessageFactory databaseMessageFactory) 
