@@ -1,6 +1,4 @@
 ﻿using Entities;
-using ReactiveUI;
-using System.Data;
 using System.Text;
 
 namespace Communication.Configurator

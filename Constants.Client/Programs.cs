@@ -1,6 +1,5 @@
 ﻿namespace Constants.Client
 {
-
     public class Programs
     {
         public const string SmartWeight = "SmartWeight";

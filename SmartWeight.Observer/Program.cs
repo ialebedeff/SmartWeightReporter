@@ -4,7 +4,7 @@ using SmartWeight.Updater.API;
 
 var httpClientBuilder = new HttpClientBuilder();
 var httpClient = httpClientBuilder.Build("https://localhost:7274", new System.Net.CookieContainer());
-var restApiClient = new SmartWeightApi(httpClient, null);
+var restApiClient = new RestApiClients(httpClient, null);
 await restApiClient.Server.Authorization.SignInAsync("test123", "Oliver15243@");
 
 var factories = await restApiClient.Server.Factory.GetCurrentUserFactoriesAsync();
