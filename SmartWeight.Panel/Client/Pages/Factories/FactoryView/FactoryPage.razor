@@ -1,0 +1,64 @@
+﻿@using Entities;
+@using Entities.Database;
+@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Components
+@using SmartWeight.Panel.Client.Shared;
+
+@page "/factory/{id:int}"
+@layout AuthorizedLayout;
+@inherits ReactiveComponentBase<FactoryViewModel>;
+
+@if (ViewModel is not null)
+{
+    @if (ViewModel.Factory is not null)
+    {
+        <MudStack Row="true" Style="margin-top: 20px;">
+            <MudPaper Elevation="0" Class="col-9" Style="padding: 20px;">
+                <MudText Style="font-size: 1.25rem; font-weight: 500;">@ViewModel.Factory.Title</MudText>
+                <MudTable Items="ViewModel.Weighings" T="Weighings">
+                    <HeaderContent>
+                        <MudTh>Вес</MudTh>
+                        <MudTh>Время окончания</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd>@context.Weight</MudTd>
+                        <MudTd>@context.EndDatetime</MudTd>
+                    </RowTemplate>
+                </MudTable>
+            </MudPaper>
+            <MudItem Class="col-3">
+                <NoteArea FactoryId="Id"></NoteArea>
+            </MudItem>
+        </MudStack>
+    }
+}
+
+@code {
+    [Inject]
+    public FactoryViewModel FactoryViewModel
+    {
+        get { return ViewModel; }
+        set { ViewModel = value; }
+    }
+
+    [Parameter]
+    public int Id
+    {
+        get { return FactoryViewModel.FactoryId; }
+        set { FactoryViewModel.FactoryId = value; }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (ViewModel is not null)
+        {
+            FactoryViewModel.LoadFactoryCommand
+                .Execute(Id)
+                .Subscribe(factory =>
+                {
+                    ViewModel.Factory = factory;
+                    StateHasChanged();
+                });
+        }
+    }
+}

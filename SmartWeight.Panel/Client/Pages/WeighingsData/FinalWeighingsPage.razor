@@ -1,0 +1,73 @@
+﻿@using SmartWeight.Panel.Client.Components
+@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Components
+@using SmartWeight.Panel.Client.Shared;
+
+@page "/final-weighings";
+@layout AuthorizedDashboardLayout;
+@inherits ReactiveComponentBase<FinalWeighingsViewModel>;
+
+@if (ViewModel is not null)
+{
+    @if (ViewModel.Weighings is not null)
+    {
+        <FilterBar ReloadDataByFilterCommand="ViewModel.LoadDataByFilterCommand"></FilterBar>
+        <MudTable Items="ViewModel.Weighings">
+            <HeaderContent>
+                <MudTh>№ машины</MudTh>
+                <MudTh>№ прицепа</MudTh>
+                <MudTh>Вес на заезде</MudTh>
+                <MudTh>Вес на выезде</MudTh>
+                <MudTh>Время выезда</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    @context.TransportNumber
+                </MudTd>
+                <MudTd>
+                    @context.TrailerNumber
+                </MudTd>
+                <MudTd>
+
+                </MudTd>
+                <MudTd>
+                    @context.TransportNumber
+                </MudTd>
+                <MudTd>
+                    @context.TransportNumber
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+}
+
+@code {
+    [Inject]
+    public FinalWeighingsViewModel FinalWeighingsViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = value;
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            FinalWeighingsViewModel.Activator.Activate();
+
+            FinalWeighingsViewModel.LoadCurrentFactoryCommand.Execute();
+            FinalWeighingsViewModel.ConnectionCommand.Execute();
+        }
+
+        return base.OnAfterRenderAsync(firstRender);
+    }
+    //protected override void OnInitialized()
+    //{
+    //    FinalWeighingsViewModel.Activator.Activate();
+    //}
+
+    //protected override void Dispose(bool disposing)
+    //{
+    //    FinalWeighingsViewModel.Activator.Deactivate();
+    //}
+}

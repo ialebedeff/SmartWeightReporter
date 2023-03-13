@@ -1,0 +1,74 @@
+﻿@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Components
+@using SmartWeight.Panel.Client.Shared;
+@using System.Diagnostics.CodeAnalysis;
+
+@page "/charts";
+@layout AuthorizedDashboardLayout;
+@inherits ReactiveComponentBase<ChartsViewModel>;
+
+@if (ViewModel is not null)
+{
+    <FilterBar ReloadDataByFilterCommand="ViewModel.LoadWeighingsCommand"></FilterBar>
+    <MudStack Spacing="0" Justify="Justify.Center">
+        <MudPaper Class="col-12" Elevation="0" Style="margin-top: 20px;">
+            <MudStack Row="true">
+                <MudItem Class="col-4">
+                    <MudStack Style="margin: 20px 40px">
+                        <MudText Color="Color.Primary" Style="font-size: 2.75rem; font-weight: 400;">@ViewModel.TotalWeighingsCount</MudText>
+                        <MudText Style="font-size: .85rem; font-weight: 400;">Взвешиваний в списке</MudText>
+                        @* <MudProgressLinear Value=".6"></MudProgressLinear>*@
+                    </MudStack>
+                </MudItem>
+
+                @* <MudDivider Vertical="true" Style="color: #A9B0B4; width: 2px; height: 12rem;"></MudDivider>*@
+                <MudItem Class="col-4">
+                    <MudStack Style="margin: 20px 40px;">
+                        <MudText Color="Color.Primary" Style="font-size: 2.75rem; font-weight: 400;">@ViewModel.TotalWeight</MudText>
+                        <MudText Style="font-size: .85rem; font-weight: 400;">Общая масса взвешиваний</MudText>
+                        @*<MudProgressLinear Value=".6"></MudProgressLinear>*@
+                    </MudStack>
+                </MudItem>
+
+                @* <MudDivider Vertical="true" Style="color:#A9B0B4; width: 2px; height: 12rem;"></MudDivider>*@
+                <MudItem Class="col-4">
+                    <MudStack Style="margin: 20px 40px;">
+                        <MudText Color="Color.Primary" Style="font-size: 2.75rem; font-weight: 400;">@ViewModel.WeighingsCount</MudText>
+                        <MudText Style="font-size: .85rem; font-weight: 400;">Общее количество взвешиваний</MudText>
+                        @* <MudProgressLinear Value=".6"></MudProgressLinear>*@
+                    </MudStack>
+                </MudItem>
+            </MudStack>
+        </MudPaper>
+
+        @*<MudPaper Class="col-12" Elevation="0" Style="margin-top: 10px;">*@
+        <MudPaper Elevation="0" MaxHeight="450px" Style="margin-top: 20px;">
+            <div style="width: 100%; max-height: 450px; padding: 20px; border: 1px solid #EFEFEF; margin-bottom: 20px; border-radius: 5px; cursor: pointer;">
+                <canvas class="chart" height="350" width="900" style="margin: 0 auto;" id="batch-average-chart"></canvas>
+            </div>
+        </MudPaper>
+        @* </MudPaper>*@
+
+    </MudStack>
+}
+
+@code {
+    [Inject]
+    public ChartsViewModel ChartsViewModel
+    {
+        get { return this.ViewModel; }
+        set { this.ViewModel = value; }
+    }
+
+    protected override void OnInitialized()
+    {
+        ChartsViewModel.Activator?.Activate();
+        base.OnInitialized();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        ChartsViewModel.Activator?.Deactivate();
+        base.Dispose(disposing);
+    }
+}

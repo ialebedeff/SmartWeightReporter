@@ -1,0 +1,77 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization;
+@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Pages.Charts;
+@using SmartWeight.Panel.Client.Pages.WeighingsData;
+@using SmartWeight.Panel.Client.Shared.ViewModels;
+
+@inherits ReactiveLayoutComponentBase<AuthorizedDashboardViewModel>;
+@inject AuthenticationStateProvider AuthState;
+@inject NavigationManager Navigation;
+@layout AuthorizedUserLayout;
+@page "/dashboard";
+
+@if (IsAuthenticated)
+{
+    <MudLayout>
+
+        <MudTabs Outlined="true" Border="false">
+            <MudTabPanel Text="Диаграммы" OnClick="@(() => Navigation.NavigateTo("/charts"))" />
+            <MudTabPanel Text="Итоговые взвешивания" OnClick="@(() => Navigation.NavigateTo("/final-weighings"))" />
+            <MudTabPanel Text="Bug Report" />
+        </MudTabs>
+
+            @if (ViewModel is not null)
+            @if (ViewModel.ApplicationState.IsCurrentFactoryOnline)
+            {
+                <MudContainer Style="margin-top: 20px;" MaxWidth="MaxWidth.Large">
+                    @Body
+                </MudContainer>
+            }
+
+    </MudLayout>
+}
+
+@code {
+    public bool IsAuthenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthState.GetAuthenticationStateAsync()
+           .ContinueWith(task =>
+           {
+               if (task.IsFaulted) Navigation.NavigateTo("/login");
+               if (task.IsCompletedSuccessfully &&
+                   task.Result is not null &&
+                   task.Result.User.Identity?.IsAuthenticated is true &&
+                  (task.Result.User.IsInRole("User") &&
+                  !task.Result.User.IsInRole("Admin")))
+               {
+                   // Ставим флаг, чтобы страница отрендерилась
+                   IsAuthenticated = true;
+                   InvokeAsync(StateHasChanged);
+                   // Если пользователь авторизован, то пропускаем
+                   // Иначе редиректим его на /login
+               }
+               else { Navigation.NavigateTo("/login"); }
+           });
+    }
+
+    [Inject]
+    public AuthorizedDashboardViewModel AuthorizedDashboardViewModel
+    {
+        get { return this.ViewModel; }
+        set { this.ViewModel = value; }
+    }
+
+    protected override void OnInitialized()
+    {
+        this.ViewModel?.Activator.Activate();
+        base.OnInitialized();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        this.ViewModel?.Activator.Deactivate();
+        base.Dispose(disposing);
+    }
+}

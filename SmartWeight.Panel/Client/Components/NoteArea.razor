@@ -1,0 +1,43 @@
+﻿@using DynamicData;
+@using Entities;
+@using ReactiveUI.Blazor;
+@using Humanizer;
+
+@inherits ReactiveInjectableComponentBase<NoteAreaViewModel>;
+
+@if (ViewModel is not null)
+{
+    <MudPaper Elevation="0" Style="padding: 20px;">
+        <MudText Style="font-size: 1.05rem; font-weight: 500;">Заметки</MudText>
+        <MudText Style="font-size: .85rem; font-weight: 400;">Здесь вы можете оставить заметки по конкретному заводу</MudText>
+
+        <div id="scrollableArea" style="margin-top: 20px; overflow: auto; height: 30%; min-height: 300px; max-height: 500px;">
+            <MudVirtualize Items="ViewModel.Notes">
+                <div style="margin-bottom: 20px; overflow-wrap: break-word;">
+                    <MudText Style="font-size: .85rem; font-weight: 500;" Color="Color.Primary">@context.User.UserName</MudText>
+                    <MudText Style="font-size: .75rem; font-weight: 400; margin-bottom: 10px;">@context.CreateTime.Humanize()</MudText>
+                    <MudPaper Elevation="0" Style="font-size: .85rem; font-weight: 400; padding: 10px; background-color: #F5F9FA; ">
+                        <MudText>@context.Text</MudText>
+                    </MudPaper>
+                    <MudDivider></MudDivider>
+                </div>
+            </MudVirtualize>
+        </div>
+
+        <MudStack Row="true">
+            <MudTextField T="string"
+                      @bind-Text="ViewModel.Text"
+                      Label="Напишите сообщение" Variant="Variant.Outlined" />
+            <MudIconButton Icon="@Icons.Material.Filled.Send" Command="ViewModel.CreateNoteCommand" Variant="Variant.Text" Color="Color.Primary" Size="Size.Large"></MudIconButton>
+        </MudStack>
+    </MudPaper>
+}
+@code {
+    [Parameter]
+    public int FactoryId
+    {
+        get => ViewModel.FactoryId;
+        set => ViewModel.FactoryId = value;
+    }
+}
+

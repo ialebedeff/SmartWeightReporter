@@ -1,0 +1,44 @@
+﻿@using Entities;
+@using ReactiveUI.Blazor;
+@using System.Diagnostics.CodeAnalysis;
+
+@inherits ReactiveInjectableComponentBase<FactoryCardViewModel>;
+
+@if (ViewModel is not null)
+{
+    @if (Factory is not null)
+    {
+        <MudCard Outlined="true" Class="col-3" Style="margin-right: 10px; margin-bottom: 10px;">
+            <MudCardHeader>
+                <MudText>@(string.Format("{0}...", string.Join("", Factory.Title.Take(18))))</MudText>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>Состояние: @string.Format("{0}", ViewModel.IsOnline ? "Подключен" : "Не в сети")</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Disabled="ViewModel.IsSelectionDisabled" Command="ViewModel.SelectFactoryCommand" CommandParameter="Factory" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Выбрать</MudButton>
+                    <MudButton DisableElevation="true" Variant="Variant.Text" Color="Color.Primary">Подробнее</MudButton>
+                </MudCardActions>
+            </MudCard>
+    }
+}
+@code {
+    [Parameter]
+    public Factory Factory
+    {
+        get => this.ViewModel.CurrentFactory;
+        set => this.ViewModel.CurrentFactory = value;
+    }
+
+    protected override void OnInitialized()
+    {
+        this.ViewModel?.Activator.Activate();
+        base.OnInitialized();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        this.ViewModel?.Activator.Deactivate();
+        base.Dispose(disposing);
+    }
+}

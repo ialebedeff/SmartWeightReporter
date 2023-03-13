@@ -1,0 +1,35 @@
+﻿@using SmartWeight.Admin.Client.Pages.Login;
+
+@inherits CreateFactoryDialogViewModel
+
+<style>
+    .dialog {
+        width: 20%;
+        padding: 0px 40px;
+    }
+
+    .title {
+        font-size: 1.25rem;
+        font-weight: 400;
+        margin-bottom: 40px;
+    }
+
+    .button {
+        margin-right: 18px;
+        margin-bottom: 40px;
+    }
+</style>
+
+<MudDialog Class="dialog">
+    <DialogContent>
+        <MudText Class="title" Align="Align.Center">Создать аккаунт для клиента</MudText>
+       
+        <MudTextField @bind-Text="User.Email" Required="true" RequiredError="Введите почтовый адрес" Variant="Variant.Outlined" Label="Почтовый адрес" T="string"></MudTextField>
+        <MudTextField @bind-Text="User.UserName" Required="true" RequiredError="Введите логин" Variant="Variant.Outlined" Label="Логин" T="string"></MudTextField>
+        <MudTextField @bind-Text="User.Password" Required="true" RequiredError="Введите пароль" Variant="Variant.Outlined" Label="Пароль" T="string"></MudTextField>
+        <MudCheckBox Color="Color.Primary" Label="Разрешить обновления" Checked="true"></MudCheckBox>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="CreateUserAsync" Class="button" Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true">Создать</MudButton>
+    </DialogActions>
+</MudDialog>

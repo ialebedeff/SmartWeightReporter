@@ -1,0 +1,23 @@
+﻿@inherits LayoutComponentBase
+
+
+<MudThemeProvider Theme="Theme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        @Body
+    </MudContainer>
+</MudMainContent>
+
+@code {
+    public MudTheme Theme { get; set; } = new()
+        {
+
+            Palette = new Palette()
+            {
+                Primary = "#1A73E8"
+            }
+        };
+}

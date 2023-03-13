@@ -1,0 +1,38 @@
+﻿@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Shared;
+
+@inherits ReactiveInjectableComponentBase<FactorySelectionViewModel>;
+@layout AuthorizedEmptyLayout;
+@page "/select/factories"
+
+@if (ViewModel is not null)
+{
+    <MudPaper Outlined="true" Elevation="0" Style="padding: 20px;">
+        <MudStack>
+            <MudText Style="font-weight: 400; font-size: 1.45rem;">Выберите производство</MudText>
+            <MudText>Выберите любое производство для просмотра статистики</MudText>
+
+            <MudGrid Spacing="20">
+                @foreach (var factory in ViewModel.UserFactories)
+                {
+                    <FactoryCard Factory="factory"></FactoryCard>
+                }
+            </MudGrid>
+
+          @*  <MudButton FullWidth="false" Style="width: 200px;" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Продолжить</MudButton>*@
+        </MudStack>
+    </MudPaper>
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        this.ViewModel?.Activator.Activate();
+        base.OnInitialized();
+    }
+    protected override void Dispose(bool disposing)
+    {
+        this.ViewModel?.Activator.Deactivate();
+        base.Dispose(disposing);
+    }
+}

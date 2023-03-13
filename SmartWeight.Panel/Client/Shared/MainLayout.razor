@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider Theme="Theme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudMainContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        @Body
+    </MudContainer>
+</MudMainContent>
+
+@code {
+    public MudTheme Theme { get; set; } = new()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#192641",
+                Background = "#1D2026",
+                TextPrimary = "#FEFEFE"
+            },
+            Palette = new Palette()
+            {
+                TextPrimary = "#576064",
+                Primary = "#4265ED",
+                Background = "#F5F9FC"
+            }
+        };
+}

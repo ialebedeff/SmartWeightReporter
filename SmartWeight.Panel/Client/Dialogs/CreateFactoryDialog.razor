@@ -1,0 +1,66 @@
+﻿@using ReactiveUI.Blazor;
+
+@inherits ReactiveComponentBase<CreateFactoryDialogViewModel>
+
+<style>
+    .dialog {
+        width: 20%;
+        min-width: 400px;
+        padding: 0px 40px;
+    }
+
+    .title {
+        font-size: 1.25rem;
+        font-weight: 400;
+        margin-bottom: 40px;
+    }
+
+    .button {
+        margin-right: 18px;
+        margin-bottom: 40px;
+    }
+</style>
+
+@if (ViewModel is not null)
+{
+    <MudDialog Class="dialog">
+        <DialogContent>
+            <MudText Class="title" Align="Align.Center">Создать аккаунт для клиента</MudText>
+            <MudTextField @bind-Text="ViewModel.Email" Required="true" RequiredError="Введите почтовый адрес" Variant="Variant.Outlined" Label="Почтовый адрес" T="string"></MudTextField>
+            <MudTextField @bind-Text="ViewModel.UserName" Required="true" RequiredError="Введите логин" Variant="Variant.Outlined" Label="Логин" T="string"></MudTextField>
+            <MudTextField @bind-Text="ViewModel.Password" Required="true" RequiredError="Введите пароль" Variant="Variant.Outlined" Label="Пароль" T="string"></MudTextField>
+            @foreach (var factory in ViewModel.Factories)
+            {
+                <MudStack Row="true">
+                    <MudAutocomplete T="string" Label="Название завода" @bind-Value="factory.Title" SearchFunc="ViewModel.SearchAsync" Variant="Variant.Outlined" ProgressIndicatorColor="Color.Primary">
+                        <ProgressIndicatorInPopoverTemplate>
+                            <MudList Clickable="false">
+                                <MudListItem>
+                                    Загрузка
+                                </MudListItem>
+                            </MudList>
+                        </ProgressIndicatorInPopoverTemplate>
+                    </MudAutocomplete>
+                    <MudButton Variant="Variant.Text" Command="ViewModel.RemoveFactoryCommand" CommandParameter="factory">
+                        <MudIcon Icon="@Icons.Material.Filled.Delete"></MudIcon>
+                    </MudButton>
+                </MudStack>
+            }
+            <MudCheckBox Color="Color.Primary" Label="Разрешить обновления" Checked="true"></MudCheckBox>
+        </DialogContent>
+        <DialogActions>
+            <MudButton Command="ViewModel.AddFactoryCommand" Class="button" Color="Color.Primary" Variant="Variant.Text" DisableElevation="true">Добавить завод</MudButton>
+            <MudButton Command="ViewModel.CreateUserCommand" Class="button" Color="Color.Primary" Variant="Variant.Filled" DisableElevation="true">Создать</MudButton>
+        </DialogActions>
+    </MudDialog>
+}
+
+@code
+{
+    [Inject]
+    public CreateFactoryDialogViewModel CreateFactoryDialogViewModel
+    {
+        get => ViewModel;
+        set => ViewModel = value;
+    }
+}

@@ -1,0 +1,30 @@
+﻿@page "/factories";
+@layout AuthorizedLayout;
+@inherits FactoryCollectionViewModel;
+
+<style>
+    .search-col {
+        min-width: 200px;
+        max-width: 350px;
+        width: 20%;
+    }
+
+    .grid {
+
+    }
+</style>
+
+<MudGrid Class="grid">
+    <MudItem xs="3">
+        <MudButton OnClick="OpenCreateFactoryDialogAsync" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Создать</MudButton>
+        <MudTextField Label="Поиск" T="string" Variant="Variant.Outlined" FullWidth="false"></MudTextField>
+        <MudList Clickable="true">
+            <MudListItem DisableRipple="true">
+                <MudText>1</MudText>
+            </MudListItem>
+        </MudList>
+    </MudItem>
+    <MudItem xs="6">
+
+    </MudItem>
+</MudGrid>

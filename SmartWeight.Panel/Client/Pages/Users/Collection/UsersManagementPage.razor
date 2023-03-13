@@ -1,0 +1,52 @@
+﻿@using Entities;
+@using ReactiveUI.Blazor;
+@using SmartWeight.Panel.Client.Shared;
+
+@page "/users";
+@layout AuthorizedLayout;
+@inherits ReactiveInjectableComponentBase<UsersManagementViewModel>;
+
+@if (ViewModel is not null)
+{
+    <MudGrid Style="margin-top: 20px;">
+        <MudItem Style="min-width: 400px;" Class="col-6">
+            <MudStack Justify="Justify.SpaceEvenly">
+                <MudText Style="font-size: 1.25rem; font-weight: 500;">Список учетных записей</MudText>
+                <MudText>
+                    Здесь вы можете увидеть список всех созданных учётных записей.
+                    <br />
+                    Так же вы можете создать ограничить доступ к некоторым функциям или в целом ограничить работу аккаунта
+                </MudText>
+            </MudStack>
+        </MudItem>
+        <MudItem Class="col-2"></MudItem>
+        <MudItem Class="col-4" Style="min-width: 400px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <MudTextField InputMode="InputMode.text" Immediate="true" @bind-Text="ViewModel.Search.SearchQuery" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Placeholder="Логин почта или номер телефона" Style="min-width: 210px;" Variant="Variant.Outlined" T="string"></MudTextField>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+    <MudGrid Style="width: 100%; margin-top: 50px;">
+        <MudTable Style="width: 100%;" Items="ViewModel.Search.SearchResults" Elevation="0" T="User">
+            <HeaderContent>
+                <MudTh>ID</MudTh>
+                <MudTh>Логин</MudTh>
+                <MudTh>Почтовый адрес</MudTh>
+                <MudTh>Номер телефона</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Id</MudTd>
+                <MudTd>
+                    <MudChip Style="font-weight: 500; cursor: pointer;"
+                         Variant="Variant.Text"
+                         Color="Color.Primary">
+                        @context.UserName
+                    </MudChip>
+                </MudTd>
+                <MudTd>@context.Email</MudTd>
+                <MudTd>@context.PhoneNumber</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudGrid>
+}

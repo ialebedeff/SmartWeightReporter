@@ -1,0 +1,39 @@
+﻿@inherits LoginViewModel;
+
+@page "/login";
+@page "/";
+
+<style>
+    .card {
+        width: 45%;
+        padding: 20px;
+        margin: 20% auto;
+    }
+
+    .stack {
+        margin: auto auto;
+    }
+
+    .button {
+        margin-top: 10px;
+        margin-bottom: 50px;
+    }
+
+    .text {
+        margin: 10px auto;
+        color: #525761;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+</style>
+
+<MudCard Outlined="true" Class="card">
+    <MudCardContent>
+        <MudStack AlignItems="AlignItems.End">
+            <MudText Class="text" Align="Align.Center">Вход</MudText>
+            <MudTextField FullWidth="true" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Login" @bind-Text="@LoginData.Login" Label="Логин" RequiredError="Введите логин" Required="true" T="string" Variant="Variant.Outlined" />
+            <MudTextField FullWidth="true" Immediate="true" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Password" @bind-Text="@LoginData.Password" Label="Пароль" RequiredError="Введите пароль" Required="true" T="string" Variant="Variant.Outlined" InputType="InputType.Password" />
+            <MudButton Class="button" FullWidth="false" Disabled="IsLoginInProcess" OnClick="LoginAsync" Variant="Variant.Filled" DisableElevation="true" Color="Color.Primary">Войти</MudButton>
+        </MudStack>
+    </MudCardContent>
+</MudCard>

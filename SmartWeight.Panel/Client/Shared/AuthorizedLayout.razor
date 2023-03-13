@@ -1,0 +1,87 @@
+﻿@using Microsoft.AspNetCore.Authorization;
+@using Microsoft.AspNetCore.Components.Authorization
+@using SmartWeight.Admin.Client.Pages.Factories;
+@using SmartWeight.Panel.Client.Pages.Factories.Collection
+@using SmartWeight.Panel.Client.Pages.Users.Collection
+
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthState;
+@inject NavigationManager Navigation;
+
+<MudThemeProvider Theme="Theme" IsDarkMode="false" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@if (IsAuthenticated)
+{
+    <MudLayout>
+        <MudAppBar Color="Color.Primary" Elevation="0">
+            <MudText>SmartWeight</MudText>
+        </MudAppBar>
+
+        <MudMainContent>
+            <MudTabs Outlined="true" Border="false">
+                <MudTabPanel Text="Объекты" OnClick="@(() => NavigationManager.NavigateTo("/factories"))">
+                   
+                </MudTabPanel>
+                <MudTabPanel Text="Пользователи" OnClick="@(() => NavigationManager.NavigateTo("/users"))">
+                   
+                </MudTabPanel>
+
+                <MudTabPanel Text="Настройки" />
+                <MudTabPanel Text="Bug Report" />
+            </MudTabs>
+            <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+                @Body
+            </MudContainer>
+        </MudMainContent>
+    </MudLayout>
+}
+
+@code {
+    bool _drawerOpen = false;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+    public bool IsAuthenticated { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthState.GetAuthenticationStateAsync()
+           .ContinueWith(task =>
+           {
+               if (task.IsFaulted) Navigation.NavigateTo("/login");
+               if (task.IsCompletedSuccessfully &&
+                   task.Result is not null &&
+                   task.Result.User.Identity?.IsAuthenticated is true &&
+                   task.Result.User.IsInRole("Admin"))
+               {
+                   // Ставим флаг, чтобы страница отрендерилась
+                   IsAuthenticated = true;
+                   InvokeAsync(StateHasChanged);
+                   // Если пользователь авторизован, то пропускаем
+                   // Иначе редиректим его на /login
+               }
+               else { Navigation.NavigateTo("/login"); }
+           });
+    }
+    [Inject] public NavigationManager NavigationManager { get; set; } = null!;
+    public MudTheme Theme { get; set; } = new()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#192641",
+                Background = "#1D2026",
+                TextPrimary = "#FEFEFE"
+            },
+            Palette = new Palette()
+            {
+                TextPrimary = "#576064",
+                Primary = "#4265ED",
+                Background = "#F5F9FC"
+            }
+        };
+}

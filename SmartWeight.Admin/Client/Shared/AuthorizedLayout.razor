@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+
+
+<MudThemeProvider Theme="Theme" IsDarkMode="false" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudDrawer Width="15%;" Elevation="0" Open="true" Variant="DrawerVariant.Persistent">
+        <MudDrawerHeader>
+
+        </MudDrawerHeader>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    public bool IsOpened { get; set; }
+    public MudTheme Theme { get; set; } = new()
+        {
+            PaletteDark = new PaletteDark()
+            {
+                Primary = "#685AC8",
+                Background = "#1D2026",
+                TextPrimary = "#FEFEFE"
+            },
+            Palette = new Palette()
+            {
+                Primary = "#1A73E8"
+            }
+        };
+    public Task OpenAsync()
+    {
+        IsOpened = !IsOpened;
+
+        _ = InvokeAsync(StateHasChanged);
+
+        return Task.CompletedTask;
+    }
+}

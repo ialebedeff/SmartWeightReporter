@@ -1,0 +1,84 @@
+﻿@using Entities;
+@using ReactiveUI.Blazor;
+@using SmartWeight.Admin.Client.Pages.Factories;
+@using SmartWeight.Panel.Client.Shared;
+
+@page "/factories";
+@layout AuthorizedLayout;
+@inherits ReactiveInjectableComponentBase<FactoryCollectionViewModel>;
+
+<style>
+    .collection {
+        height: 70vh;
+        overflow: auto;
+        margin: 20px 0px;
+    }
+</style>
+
+@if (ViewModel is not null)
+{
+    <MudGrid Style="margin-top: 20px;">
+        <MudItem Style="min-width: 400px;" Class="col-6">
+            <MudStack Justify="Justify.SpaceEvenly">
+                <MudText Style="font-size: 1.25rem; font-weight: 500;">Список производств</MudText>
+                <MudText>
+                    Здесь вы можете увидеть список всех созданных производств.
+                    <br />
+                    Так же вы можете создать новую учётную запись для клиента и добавить управляемые аккаунтом производства нажав на соответствующую кнопку справа страницы
+                </MudText>
+            </MudStack>
+        </MudItem>
+        <MudItem Class="col-2"></MudItem>
+        <MudItem Class="col-4" Style="min-width: 400px;">
+            <MudStack Row="true" AlignItems="AlignItems.Center">
+                <MudTextField InputMode="InputMode.text" Immediate="true" @bind-Text="ViewModel.Search.SearchQuery" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Placeholder="Название завода или почтовый адрес" Style="min-width: 210px;" Variant="Variant.Outlined" T="string"></MudTextField>
+                <MudButton Command="ViewModel.CreateFactoryCommand" Style="height: 50px; min-width: 200px;" Color="Color.Primary" Variant="Variant.Text" DisableElevation="true">
+                    <MudStack Row="true">
+                        <MudIcon Icon="@Icons.Material.Filled.Factory"></MudIcon>
+                        <MudText>Добавить завод</MudText>
+                    </MudStack>
+                </MudButton>
+            </MudStack>
+        </MudItem>
+    </MudGrid>
+
+
+    <MudGrid Style="width: 100%; margin-top: 50px;">
+        <MudTable Style="width: 100%;" @bind-Items="ViewModel.Search.SearchResults" Elevation="0" T="Factory">
+            <HeaderContent>
+                <MudTh>ID</MudTh>
+                <MudTh>Завод</MudTh>
+                <MudTh>Пользователь</MudTh>
+                <MudTh>Почтовый адрес</MudTh>
+                <MudTh>Обновления</MudTh>
+                <MudTh>Подробности</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>@context.Id</MudTd>
+                <MudTd>
+                    <MudChip Style="font-weight: 500; cursor: pointer;" 
+                             Command="ViewModel.OpenFactoryCommand" 
+                             CommandParameter="context" 
+                             Variant="Variant.Text" 
+                             Color="Color.Primary">
+                        @context.Title
+                    </MudChip>
+                </MudTd>
+                <MudTd>@context.User.UserName</MudTd>
+                <MudTd>@context.User.Email</MudTd>
+                <MudTd>
+                    <MudCheckBox Checked="context.IsUpdatesEnabled" Disabled="true" ReadOnly="true" Color="Color.Primary"></MudCheckBox>
+                </MudTd>
+                <MudTd>
+                    <MudButton DisableRipple="true" ButtonType="ButtonType.Button" Color="Color.Primary" Command="ViewModel.OpenFactoryCommand" CommandParameter="context" Variant="Variant.Text" DisableElevation="true">
+                        <MudText Style="font-weight: 500;">
+                            Подробнее
+                        </MudText>
+                    </MudButton>
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </MudGrid>
+
+}
+
