@@ -8,18 +8,7 @@
 {
     @if (Factory is not null)
     {
-        <MudCard Outlined="true" Class="col-3" Style="margin-right: 10px; margin-bottom: 10px;">
-            <MudCardHeader>
-                <MudText>@(string.Format("{0}...", string.Join("", Factory.Title.Take(18))))</MudText>
-                </MudCardHeader>
-                <MudCardContent>
-                    <MudText>Состояние: @string.Format("{0}", ViewModel.IsOnline ? "Подключен" : "Не в сети")</MudText>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton Disabled="ViewModel.IsSelectionDisabled" Command="ViewModel.SelectFactoryCommand" CommandParameter="Factory" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Выбрать</MudButton>
-                    <MudButton DisableElevation="true" Variant="Variant.Text" Color="Color.Primary">Подробнее</MudButton>
-                </MudCardActions>
-            </MudCard>
+        <MudSelectItem T="Factory" Value="ViewModel.CurrentFactory" Disabled="ViewModel.IsSelectionDisabled"/>
     }
 }
 @code {

@@ -105,7 +105,9 @@ namespace Communication.Hubs
         {
             // Получаем подключения заказчика
             var consumers = ClientHubManager.Instance.Clients
-                .Where(client => !client.IsFactoryUser &&
+                .Where(client => 
+                hubClient is not null &&  
+                !client.IsFactoryUser &&
                        client.User.Id == hubClient.User.Id)
                 .Select(client => client.ConnectionId)
                 .ToImmutableList();

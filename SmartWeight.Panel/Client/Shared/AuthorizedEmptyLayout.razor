@@ -8,9 +8,15 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
+<style>
+    body {
+        background-color: #FFF;
+    }
+</style>
+
 @if (IsAuthenticated)
 {
-    <MudLayout>
+    <MudLayout Style="margin: auto auto;">
         <MudContainer Style="margin-top: 20px;" MaxWidth="MaxWidth.Large">
             @Body
         </MudContainer>
@@ -22,14 +28,14 @@
         {
             PaletteDark = new PaletteDark()
             {
-                Primary = "#192641",
+                Primary = "#15B977",
                 Background = "#1D2026",
                 TextPrimary = "#FEFEFE"
             },
             Palette = new Palette()
             {
                 TextPrimary = "#576064",
-                Primary = "#4265ED",
+                Primary = "#15B977",
                 Background = "#F5F9FC"
             }
         };

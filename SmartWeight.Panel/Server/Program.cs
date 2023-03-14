@@ -5,13 +5,8 @@ using Entities;
 using EntitiesMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Hosting.Internal;
 using Narochno.Jenkins;
-using SmartWeight.Admin.Client.Pages.Factories;
 using SmartWeight.RemoteStorage;
 
 var builder = WebApplication.CreateBuilder(args);

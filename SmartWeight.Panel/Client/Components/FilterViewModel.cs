@@ -61,5 +61,15 @@ namespace SmartWeight.Panel.Client.Components
 
             this.RaisePropertyChanged(nameof(Filter));
         }
+
+        private IEnumerable<Factory> _userFactories;
+        /// <summary>
+        /// Производства пользователя
+        /// </summary>
+        public IEnumerable<Factory> UserFactories
+        {
+            get { return this._userFactories; }
+            set { this.RaiseAndSetIfChanged(ref _userFactories, value); }
+        }
     }
 }

@@ -12,16 +12,41 @@
 @if (IsAuthenticated)
 {
     <MudLayout>
-        <MudAppBar Color="Color.Primary" Elevation="0">
-            <MudText>SmartWeight</MudText>
-            <MudSpacer/>
-            <MudTabs Color="Color.Primary">
-                <MudTabPanel Text="Главная" />
-                <MudTabPanel Text="Персонал" />
-                <MudTabPanel Text="Тест" />
-            </MudTabs>
+        <MudAppBar Elevation="0" Style="background-color: rgba(255,255,255,0.1); backdrop-filter: blur(5px);">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu"
+                       Color="Color.Primary"
+                       Edge="Edge.Start"
+                       OnClick="DrawerToggle" />
         </MudAppBar>
+        <MudDrawer @bind-Open="_drawerOpen">
+            <MudPaper Width="250px" Class="py-3" Elevation="0">
+                <MudNavMenu Dense="true" Rounded="true" Bordered="false" Margin="Margin.Dense" Color="Color.Secondary" Class="pa-2">
+                    <MudNavLink Href="/applications" Icon="@Icons.Material.Filled.Apps">Заявки</MudNavLink>
+                    <MudNavGroup Title="Отчёты" Icon="@Icons.Material.Filled.Report" Expanded="true">
+                        <MudNavLink Href="/consumption/bunker">Расход по бункеру</MudNavLink>
+                        <MudNavLink Href="/consumption/recipe">Расход по рецепту</MudNavLink>
+                        <MudNavLink Href="/consumption/material">Расход по материалу</MudNavLink>
+                    </MudNavGroup>
+                    <MudNavGroup Title="Отчёты" Icon="@Icons.Material.Filled.AreaChart" Expanded="true">
+                        <MudNavLink Href="/charts/ordered-volume">График объёма</MudNavLink>
+                        <MudNavLink Href="/charts/downtime">График простоя</MudNavLink>
+                    </MudNavGroup>
+                    <MudNavGroup Title="Техника" Icon="@Icons.Material.Filled.CarRepair" Expanded="true">
+                        <MudNavLink Href="/technic/motohours">Моточасы</MudNavLink>
+                    </MudNavGroup>
+                    <MudNavGroup Title="Настройки" Icon="@Icons.Material.Filled.Settings" Expanded="true">
+                        <MudNavLink Href="/settings/factory">Производство</MudNavLink>
+                        <MudNavLink Href="/settings/security">Безопасность</MudNavLink>
+                        <MudNavLink Disabled="true" Href="/consumtion/recipe">Приложение</MudNavLink>
+                        <MudNavLink Disabled="true" Href="/consumtion/material">Плагины</MudNavLink>
+                    </MudNavGroup>
 
+                    <MudNavLink Disabled="true" Href="/about">Руководство пользователя</MudNavLink>
+                    <MudNavLink Href="/logout" Icon="@Icons.Material.Filled.Logout">Выход</MudNavLink>
+
+                </MudNavMenu>
+            </MudPaper>
+        </MudDrawer>
         <MudMainContent>
             @Body
         </MudMainContent>
@@ -71,7 +96,7 @@
             Palette = new Palette()
             {
                 TextPrimary = "#576064",
-                Primary = "#4265ED",
+                Primary = "#15B977",
                 Background = "#F5F9FC"
             }
         };

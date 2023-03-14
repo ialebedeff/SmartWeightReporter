@@ -1,0 +1,15 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "npx sass ./wwwroot/scss/site.scss ./wwwroot/css/site.css",
+    "sass:watch": "npx sass --watch ./wwwroot/scss/site.scss ./wwwroot/css/site.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "sass": "^1.59.2"
+  }
+}

@@ -4,16 +4,91 @@
 @inject NavigationManager Navigation;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+<style>
+
+    /*======================
+                404 page
+            =======================*/
+
+
+    .page_404 {
+        background-color: #FFF;
+        align-items: center;
+        padding: 100px 0;
+        border: 1px solid #15B977;
+        border-radius: 5px;
+        font-family: 'Arvo', serif;
+    }
+
+        .page_404 img {
+            width: 100%;
+        }
+
+    .four_zero_four_bg {
+        background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+        height: 400px;
+        background-position: center;
+    }
+
+
+        .four_zero_four_bg h1 {
+            font-size: 80px;
+        }
+
+        .four_zero_four_bg h3 {
+            font-size: 80px;
+        }
+
+    .link_404 {
+        padding: 10px 20px;
+        background: #39ac31;
+        margin: 20px 0;
+        display: inline-block;
+    }
+
+    .contant_box_404 {
+        margin-top: -50px;
+    }
+</style>
+
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+                <Authorizing>
+                    <span>Проверка авторизации...</span>
+                </Authorizing>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
         </Found>
         <NotFound>
             <PageTitle>Not found</PageTitle>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p role="alert">Sorry, there's nothing at this address.</p>
+                <section class="page_404">
+                    <MudStack>
+                        <div class="col-sm-10 col-sm-offset-1  text-center" style="margin: 0 auto;">
+                            <div class="four_zero_four_bg">
+                                <h1 class="text-center ">404</h1>
+
+
+                            </div>
+
+                            <div class="contant_box_404">
+                                <h3 class="h2">
+                                    Похоже вы немного потерялись
+                                </h3>
+
+                                <p>страницы по данному адресу не существует!</p>
+
+                                <MudButton DisableElevation="true" Color="Color.Primary" Variant="Variant.Filled">
+                                    <MudText>
+                                        На главную
+                                    </MudText>
+                                </MudButton>
+                            </div>
+                        </div>
+                    </MudStack>
+                </section>
             </LayoutView>
         </NotFound>
     </Router>

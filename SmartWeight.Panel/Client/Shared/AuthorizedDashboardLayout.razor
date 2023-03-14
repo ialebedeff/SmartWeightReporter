@@ -13,21 +13,13 @@
 @if (IsAuthenticated)
 {
     <MudLayout>
-
-        <MudTabs Outlined="true" Border="false">
-            <MudTabPanel Text="Диаграммы" OnClick="@(() => Navigation.NavigateTo("/charts"))" />
-            <MudTabPanel Text="Итоговые взвешивания" OnClick="@(() => Navigation.NavigateTo("/final-weighings"))" />
-            <MudTabPanel Text="Bug Report" />
-        </MudTabs>
-
-            @if (ViewModel is not null)
+        @if (ViewModel is not null)
             @if (ViewModel.ApplicationState.IsCurrentFactoryOnline)
             {
-                <MudContainer Style="margin-top: 20px;" MaxWidth="MaxWidth.Large">
+                <MudContainer MaxWidth="MaxWidth.Large">
                     @Body
                 </MudContainer>
             }
-
     </MudLayout>
 }
 

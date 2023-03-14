@@ -16,12 +16,6 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
     {
         public FactoryCardViewModel(ApplicationState applicationState, ISnackbar snackbar, IDialogService dialog, RestApiClients updaterApi, NavigationManager navigation, CommunicationService<ServerConfiguration> communicationService, DatabaseMessageFactory databaseMessageFactory) : base(applicationState, snackbar, dialog, updaterApi, navigation, communicationService, databaseMessageFactory)
         {
-            SelectFactoryCommand = ReactiveCommand.Create<Factory>(factory =>
-            {
-                ApplicationState.CurrentFactory = factory;
-                Navigation.NavigateTo("/charts");
-            });
-
             this.WhenActivated(disposables =>
             {
                 this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)

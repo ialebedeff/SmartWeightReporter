@@ -1,4 +1,5 @@
-﻿@using ReactiveUI.Blazor;
+﻿@using Entities;
+@using ReactiveUI.Blazor;
 @using SmartWeight.Panel.Client.Shared;
 
 @inherits ReactiveInjectableComponentBase<FactorySelectionViewModel>;
@@ -7,21 +8,34 @@
 
 @if (ViewModel is not null)
 {
-    <MudPaper Outlined="true" Elevation="0" Style="padding: 20px;">
-        <MudStack>
-            <MudText Style="font-weight: 400; font-size: 1.45rem;">Выберите производство</MudText>
-            <MudText>Выберите любое производство для просмотра статистики</MudText>
+    <MudStack Style="margin-top: 20vh;">
+        <MudGrid Style="padding: 50px;">
+            <MudImage Style="margin-right: 100px;" Width="240" Src="/images/billy_selection.svg"></MudImage>
+            <MudStack Style="width: 25%; min-width: 400px;">
+                <MudText Style="font-weight: 400; font-size: 1.45rem;">Выберите производство</MudText>
+                <MudText>Выберите любое производство для просмотра самой важной информации</MudText>
+                <MudSelect T="Factory" Variant="Variant.Outlined" @bind-SelectedValues="ViewModel.SelectedFactories" ToStringFunc="(factory => factory.Title)">
+                    @foreach (var factory in ViewModel.UserFactories)
+                    {
+                        <FactoryCard Factory="factory"></FactoryCard>
+                    }
+                </MudSelect>
+                <MudButton
+                    Command="ViewModel.ApproveSelectionAndNavigateCommand"
+                    Style="height: 45px;"
+                    DisableElevation="true" 
+                    Variant="Variant.Filled"
+                    Disabled="ViewModel.IsSelectionDisabled"
+                    Color="Color.Primary">
 
-            <MudGrid Spacing="20">
-                @foreach (var factory in ViewModel.UserFactories)
-                {
-                    <FactoryCard Factory="factory"></FactoryCard>
-                }
-            </MudGrid>
-
-          @*  <MudButton FullWidth="false" Style="width: 200px;" DisableElevation="true" Variant="Variant.Filled" Color="Color.Primary">Продолжить</MudButton>*@
-        </MudStack>
-    </MudPaper>
+                    <MudText>Подтвердить</MudText>
+                </MudButton>
+                <MudButton Command="ViewModel.SignOutAndNavigateToLoginCommand" Style="height: 45px;" DisableRipple="true" DisableElevation="true" Variant="Variant.Text" Color="Color.Primary">
+                    <MudText>Выход из аккаунта</MudText>
+                </MudButton>
+            </MudStack>
+        </MudGrid>
+    </MudStack>
 }
 
 @code {

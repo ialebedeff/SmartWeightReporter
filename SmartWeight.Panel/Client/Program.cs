@@ -21,6 +21,7 @@ using SmartWeight.Panel.Client.Pages.WeighingsData;
 using SmartWeight.Panel.Client.Shared.ViewModels;
 using SmartWeight.Updater.API;
 
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
@@ -31,6 +32,7 @@ builder.Services.AddScoped<RestApiClients>(api => new RestApiClients(new HttpCli
 {
     BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)
 }, null));
+
 builder.Services.AddOptions();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
