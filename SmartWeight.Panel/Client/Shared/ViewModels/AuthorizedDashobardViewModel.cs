@@ -9,6 +9,7 @@ using ReactiveUI;
 using SmartWeight.Panel.Client.Pages.Login;
 using SmartWeight.Updater.API;
 using System.Data;
+using System.Reactive;
 using System.Reactive.Disposables;
 
 namespace SmartWeight.Panel.Client.Shared.ViewModels
@@ -30,15 +31,26 @@ namespace SmartWeight.Panel.Client.Shared.ViewModels
                   , communicationService
                   , databaseMessageFactory)
         {
-            ConnectionCommand.Execute();
+
+            LoadConnectedFactoriesCommand = ReactiveCommand.CreateFromTask(
+                _ => CommunicationService.Messages.Clients.Clients.SendMessageAsync());
 
             this.WhenActivated(disposables =>
             {
                 this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)
                     .Subscribe(results => NotifyOnConnectionClientsChanged(results))
                     .DisposeWith(disposables);
+
+                this.ConnectionCommand
+                    .Execute()
+                    .Subscribe(result =>
+                    {
+                        LoadConnectedFactoriesCommand.Execute();
+                    })
+                    .DisposeWith(disposables);
             });
         }
+        public ReactiveCommand<Unit, Unit> LoadConnectedFactoriesCommand { get; set; }
         /// <summary>
         /// Активатор вью модели
         /// </summary>

@@ -13,6 +13,7 @@ var factory = factories.Last();
 var communicationService = new CommunicationService<ClientConfiguration>(
     "https://localhost:7274/hub/smartweight",
     new ClientConfiguration(), httpClientBuilder.CookieContainer);
+
 await communicationService.StartAsync();
 await communicationService.RegisterAsClientFactoryAsync(factory);
 

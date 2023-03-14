@@ -16,6 +16,7 @@ public class DatabaseApi
         Weighings = new DatabaseResultMessageExecutor<Weighings>(hubConnection);
     }
 
+    public DatabaseResultMessageExecutor<Car> Cars { get; set; }
     public DatabaseResultMessageExecutor<Weighings> Weighings { get; set; }
 }
 
@@ -50,10 +51,10 @@ public class ClientsApi
 }
 public class ServerConfiguration : CommunicationConfiguratorBase
 {
-    public DatabaseApi Database { get; set; } = null!;
-    public OnlineApi Online { get; set; } = null!;
-    public ClientsApi Clients { get; set; } = null!;
-    public UserConnectionStateApi UserConnectionState { get; set; } = null!;
+    public DatabaseApi DatabaseHub { get; set; } = null!;
+    public OnlineApi OnlineHub { get; set; } = null!;
+    public ClientsApi ClientsHub { get; set; } = null!;
+    public UserConnectionStateApi UserConnectionStateHub { get; set; } = null!;
     public override HubConnection Configure(string url, CookieContainer? cookieContainer = null)
     {
         var connectionBuilder = new HubConnectionBuilder()

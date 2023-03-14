@@ -1,7 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 
 namespace Entities.Database
 {
+    public class Car
+    {
+        /// <summary>
+        /// Номер автомобиля
+        /// </summary>
+        [Column("transport_number")] public string Number { get; set; } = null!;
+        [Column("stock_weight")] public string? TrailerNumber { get; set; }
+        [Column("stock_weight")] public int StockWeight { get; set; }
+        [Column("max_allowed_difference")] public int MaxAllowedDifference { get; set; }
+        [Column("use_as_tara")] public bool UseAsTara { get; set; }
+        [Column("capacity")] public int Capacity { get; set; }
+        [Column("volume")] public decimal Volume { get; set; }
+        [Column("rfid")] public Blob RFID { get; set; }
+        [Column("vehicle_id")] public int VehicleId { get; set; }
+        [Column("driver_id")] public int DriverId { get; set; } 
+        [Column("is_deleted")] public bool IsDeleted { get; set; } 
+    }
     public class Weighings
     {
         [Column("id")] public int Id { get; set; }

@@ -50,7 +50,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartWeight.Panel.Tests", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartWeight.Observer", "SmartWeight.Observer\SmartWeight.Observer.csproj", "{6BFE1611-71E1-4BBB-A9B5-BE6F4A5E79E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Communication.Hubs", "Communication.Hubs\Communication.Hubs.csproj", "{CA85EAE5-C80A-4E3B-B14A-45FCFD1B1DB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Communication.Hubs", "Communication.Hubs\Communication.Hubs.csproj", "{CA85EAE5-C80A-4E3B-B14A-45FCFD1B1DB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

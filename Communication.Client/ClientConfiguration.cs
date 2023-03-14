@@ -10,7 +10,7 @@ namespace Communication.Client
     /// </summary>
     public class ClientConfiguration : CommunicationConfiguratorBase
     {
-        public DatabaseMessageExecutor? DatabaseMessageExecutor { get; set; }
+        public DatabaseMessageExecutor? WeighingsExecutor { get; set; }
         public override HubConnection Configure(string url, CookieContainer? cookieContainer = null)
         {
             var connectionBuilder = new HubConnectionBuilder()
@@ -24,11 +24,15 @@ namespace Communication.Client
 
             var connection = connectionBuilder.Build();
 
-            DatabaseMessageExecutor = new DatabaseMessageExecutor(connection);
+            WeighingsExecutor = new DatabaseMessageExecutor(connection);
 
             connection.On<Message<DatabaseCommand>>("DatabaseMessageExecute", message =>
             {
-                DatabaseMessageExecutor.ExecuteResultAsync(message);
+                WeighingsExecutor.ExecuteResultAsync(message);
+            });
+            connection.On<Message<DatabaseCommand>>("CarsDatabaseMessageExecute", message =>
+            {
+                WeighingsExecutor.ExecuteResultAsync(message);
             });
 
             return connection;
@@ -38,7 +42,7 @@ namespace Communication.Client
         {
             var connection = Configure(url);
 
-            DatabaseMessageExecutor = new DatabaseMessageExecutor(connection);
+            WeighingsExecutor = new DatabaseMessageExecutor(connection);
 
             configuration.Invoke(connection);
 

@@ -14,6 +14,9 @@ namespace Communication.Client
         public DatabaseMessageExecutor(HubConnection hubConnection) : base(hubConnection, "DatabaseMessageResult")
         {
         }
+        public DatabaseMessageExecutor(HubConnection hubConnection, string methodName) : base(hubConnection, methodName) 
+        {
+        }
         public override Task<List<Dictionary<string, object>>> ExecuteAsync(Message<DatabaseCommand> databaseCommand)
         {
             return ExecuteCommandAsync(databaseCommand.Data);

@@ -16,6 +16,25 @@ namespace SmartWeight.Panel.Client
             get { return _currentFactory; }
             set { this.RaiseAndSetIfChanged(ref _currentFactory, value); }
         }
+
+        public IEnumerable<Factory> SelectedFactories
+        {
+            get 
+            {
+                if (_currentFactory is not null)
+                {
+                    yield return _currentFactory;
+                }
+                else
+                {
+                    Enumerable.Empty<Factory>();
+                }
+            }
+            set 
+            {
+                CurrentFactory = value.FirstOrDefault();
+            }
+        }
         private User? _currentUser;
         /// <summary>
         /// Текущий пользователь

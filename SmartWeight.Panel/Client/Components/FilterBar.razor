@@ -3,15 +3,25 @@
 @using ReactiveUI;
 @using System.Reactive;
 
-@inherits ReactiveComponentBase<FilterViewModel>;
+@inherits ReactiveInjectableComponentBase<FilterViewModel>;
 
 @if (ViewModel is not null)
 {
     <MudPaper Elevation="0" Style="padding: 10px;" Class="flex-wrap">
         <MudStack Row="true" Class="flex-wrap">
-            <MudSelect T="Factory">
-               
-            </MudSelect>
+            @if (ViewModel.UserFactories is null)
+            {
+                <MudSkeleton Width="200" SkeletonType="SkeletonType.Rectangle" Animation="Animation.Pulse"/>
+            }
+            else
+            {
+                <MudSelect Label="Производство" Variant="Variant.Outlined" SelectedValues="ViewModel.SelectedFactories" T="Factory" ToStringFunc="(factory => factory.Title)">
+                    @foreach (var factory in ViewModel.UserFactories)
+                    {
+                        <MudSelectItem T="Factory" Value="factory"/>
+                    }
+                </MudSelect>
+            }
             <MudTextField Label="Номер машины" Variant="Variant.Outlined" T="string" @bind-Text="ViewModel.Filter.CarNumber"></MudTextField>
             <MudDatePicker Label="Дата начала" Variant="Variant.Outlined" @bind-Date="ViewModel.Filter.From"></MudDatePicker>
             <MudDatePicker Label="Дата завершения" Variant="Variant.Outlined" @bind-Date="ViewModel.Filter.To"></MudDatePicker>
@@ -33,16 +43,21 @@
 }
 
 @code {
-    [Inject]
-    public FilterViewModel FilterViewModel
-    {
-        get { return ViewModel; }
-        set { this.ViewModel = value; }
-    }
     [Parameter]
     public ReactiveCommand<Unit, Unit> ReloadDataByFilterCommand
     {
-        get => FilterViewModel.ReloadFilterCommand;
-        set => FilterViewModel.ReloadFilterCommand = value;
+        get => ViewModel.ReloadFilterCommand;
+        set => ViewModel.ReloadFilterCommand = value;
+    }
+
+    protected override void OnInitialized()
+    {
+        this.ViewModel.Activator?.Activate();
+        base.OnInitialized();
+    }
+    protected override void Dispose(bool disposing)
+    {
+        this.ViewModel.Activator?.Deactivate();
+        base.Dispose(disposing);
     }
 }

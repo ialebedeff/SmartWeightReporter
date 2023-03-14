@@ -55,6 +55,21 @@ namespace Communication.Configurator
 
             return CreateMessage(to, command);
         }
+        public Message<DatabaseCommand> CreateSelectWorkCarsCommand(
+            Factory to)
+        {
+            var command = new DatabaseCommand(to);
+            var database = to.DatabaseConnection.Database;
+
+            command
+                .Select()
+                .All()
+                .From()
+                .Database(database)
+                .Table("work_cars");
+
+            return CreateMessage(to, command);
+        }
     }
 
     public static class DatabaseCommandsExtensions

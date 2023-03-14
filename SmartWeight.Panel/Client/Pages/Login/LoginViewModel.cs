@@ -38,7 +38,7 @@ namespace SmartWeight.Panel.Client.Pages.Login
             LoginCommand.Subscribe(OnLoginSuccessObserver);
         }
         /// <summary>
-        /// Обработка успешно авторизации
+        /// Обработка успешной авторизации
         /// </summary>
         public IObserver<Unit> OnLoginSuccessObserver { get; set; }
         /// <summary>

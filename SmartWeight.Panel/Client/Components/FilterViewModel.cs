@@ -8,13 +8,14 @@ using ReactiveUI;
 using SmartWeight.Panel.Client.Pages.Login;
 using SmartWeight.Updater.API;
 using System.Reactive;
+using System.Reactive.Disposables;
 
 namespace SmartWeight.Panel.Client.Components
 {
     /// <summary>
     /// Вью модель фильтра
     /// </summary>
-    public class FilterViewModel : ViewModelBase
+    public class FilterViewModel : ViewModelBase, IActivatableViewModel
     {
         public FilterViewModel(
               Filter filter
@@ -35,6 +36,15 @@ namespace SmartWeight.Panel.Client.Components
         {
             Filter = filter;
             ClearFilterCommand = ReactiveCommand.Create(ClearFilter);
+            LoadUserFactoriesCommand = ReactiveCommand.CreateFromTask(_ => ApiClients.Server.Factory.GetCurrentUserFactoriesAsync());
+
+            this.WhenActivated(disposables =>
+            {
+                LoadUserFactoriesCommand
+                    .Execute()
+                    .Subscribe(factories => UserFactories = factories)
+                    .DisposeWith(disposables);
+            });
         }
         /// <summary>
         /// Фильтр
@@ -49,6 +59,10 @@ namespace SmartWeight.Panel.Client.Components
         /// </summary>
         public ReactiveCommand<Unit, Unit>? ReloadFilterCommand { get; set; }
         /// <summary>
+        /// Команда для загрузки производств пользователя
+        /// </summary>
+        public ReactiveCommand<Unit, IEnumerable<Factory>?> LoadUserFactoriesCommand { get; set; }
+        /// <summary>
         /// Очистка фильтра
         /// </summary>
         private void ClearFilter()
@@ -61,15 +75,36 @@ namespace SmartWeight.Panel.Client.Components
 
             this.RaisePropertyChanged(nameof(Filter));
         }
-
-        private IEnumerable<Factory> _userFactories;
         /// <summary>
         /// Производства пользователя
         /// </summary>
-        public IEnumerable<Factory> UserFactories
+        private IEnumerable<Factory>? _userFactories;
+        /// <summary>
+        /// Производства пользователя
+        /// </summary>
+        public IEnumerable<Factory>? UserFactories
         {
             get { return this._userFactories; }
             set { this.RaiseAndSetIfChanged(ref _userFactories, value); }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        public IEnumerable<Factory>? SelectedFactories
+        {
+            get { return this.ApplicationState.SelectedFactories; }
+            set 
+            {
+                if (value is not null)
+                {
+                    ApplicationState.SelectedFactories = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+        /// <summary>
+        /// Активатор вью модели
+        /// </summary>
+        public ViewModelActivator Activator { get; set; } = new();
     }
 }
