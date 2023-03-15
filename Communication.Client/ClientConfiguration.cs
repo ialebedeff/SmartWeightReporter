@@ -11,8 +11,10 @@ namespace Communication.Client
     /// </summary>
     public class ClientConfiguration : CommunicationConfiguratorBase
     {
-        public DatabaseMessageExecutor? WeighingsExecutor { get; set; }
-        public DatabaseMessageExecutor? WorkCarsExecutor { get; set; }
+        public DatabaseExecutor? WeighingsExecutor { get; set; }
+        public DatabaseExecutor? WorkCarsExecutor { get; set; }
+        public WeighingsDatabaseExecutor? WeighingsDatabaseExecutor { get; set; }
+        public TruckDatabaseExecutor? TruckDatabaseExecutor { get; set; }
         public override HubConnection Configure(string url, CookieContainer? cookieContainer = null)
         {
             var connectionBuilder = new HubConnectionBuilder()
@@ -26,18 +28,18 @@ namespace Communication.Client
 
             var connection = connectionBuilder.Build();
 
-            WeighingsExecutor = new DatabaseMessageExecutor(connection, "DatabaseMessageResult");
-            WorkCarsExecutor= new DatabaseMessageExecutor(connection, "CarsDatabaseMessageResult");
+            TruckDatabaseExecutor = new TruckDatabaseExecutor(connection, "CarsDatabaseMessageResult");
+            WeighingsDatabaseExecutor = new WeighingsDatabaseExecutor(connection, "DatabaseMessageResult");
 
             connection.On<Message<DatabaseCommand>>("DatabaseMessageExecute", message =>
             {
                 Console.WriteLine("{0} сообщение: {1}", "DatabaseMessageExecute", JsonSerializer.Serialize(message));
-                WeighingsExecutor.ExecuteResultAsync(message);
+                WeighingsDatabaseExecutor.ExecuteAndSendResultAsync(message);
             });
             connection.On<Message<DatabaseCommand>>("CarsDatabaseMessageExecute", message =>
             {
                 Console.WriteLine("{0} сообщение: {1}", "CarsDatabaseMessageExecute", JsonSerializer.Serialize(message));
-                WorkCarsExecutor.ExecuteResultAsync(message);
+                TruckDatabaseExecutor.ExecuteAndSendResultAsync(message);
             });
 
             return connection;
@@ -47,7 +49,7 @@ namespace Communication.Client
         {
             var connection = Configure(url);
 
-            WeighingsExecutor = new DatabaseMessageExecutor(connection, "");
+            WeighingsExecutor = new DatabaseExecutor(connection, "");
 
             configuration.Invoke(connection);
 

@@ -31,8 +31,8 @@ public class OnlineApi
 }
 
 public class UserConnectionStateApi
-{ 
-    public UserConnectionStateApi(HubConnection hubConnection) 
+{
+    public UserConnectionStateApi(HubConnection hubConnection)
     {
         ConnectionStates = new ConnectionStateMessageExecutor<ConnectionStateChanged>(hubConnection);
     }
@@ -68,25 +68,13 @@ public class ServerConfiguration : CommunicationConfiguratorBase
         ClientsHub = new ClientsApi(connection);
         UserConnectionStateHub = new UserConnectionStateApi(connection);
 
-        connection.On<Message<IEnumerable<Dictionary<string, object>>>>("DatabaseMessageResult", message =>
+        connection.On<Message<IEnumerable<Weighings>>>("DatabaseMessageResult", message =>
         {
-            DatabaseHub.Weighings.ExecuteToResultsAsync(message).ContinueWith(task =>
-            {
-                if (task.IsCompletedSuccessfully)
-                {
-                    DatabaseHub.Weighings.Results = new ObservableCollectionExtended<Weighings>(task.Result);
-                }
-            });
+            DatabaseHub.Weighings.Results = new ObservableCollectionExtended<Weighings>(message.Data);
         });
-        connection.On<Message<IEnumerable<Dictionary<string, object>>>>("CarsDatabaseMessageResult", message =>
+        connection.On<Message<IEnumerable<Truck>>>("CarsDatabaseMessageResult", message =>
         {
-            DatabaseHub.Cars.ExecuteToResultsAsync(message).ContinueWith(task =>
-            {
-                if (task.IsCompletedSuccessfully)
-                {
-                    DatabaseHub.Cars.Results = new ObservableCollectionExtended<Truck>(task.Result);
-                }
-            });
+            DatabaseHub.Cars.Results = new ObservableCollectionExtended<Truck>(message.Data);
         });
         //UserConnectionStateChanged
         connection.On<Message<ObservableCollection<HubClient>>>("ReceiveConnectedUsers", message =>

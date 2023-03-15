@@ -18,14 +18,16 @@
 
     <MudGrid>
         @if (ViewModel.Cars is not null &&
-       ViewModel.Cars.Count() is not 0)
+             ViewModel.Cars.Count() is not 0)
         {
             @foreach (var truck in ViewModel.Cars)
             {
                 <TruckCard Truck="truck"></TruckCard>
             }
         }
-        else
+        else if ((ViewModel.Cars is null ||
+                  ViewModel.Cars.Count() is 0) && 
+                  string.IsNullOrEmpty(ViewModel.TransportNumber))
         {
             @for (int i = 0; i < 8; i += 1)
             {

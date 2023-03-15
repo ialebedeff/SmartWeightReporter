@@ -8,8 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper.FluentMap" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Communication.Client\Communication.Client.csproj" />
     <ProjectReference Include="..\Communication\Communication.csproj" />
+    <ProjectReference Include="..\Entities.Mapper\Entities.Mapper.csproj" />
     <ProjectReference Include="..\SmartWeight.Updater.API\SmartWeight.Updater.API.csproj" />
   </ItemGroup>
 

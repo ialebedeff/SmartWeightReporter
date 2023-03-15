@@ -39,9 +39,9 @@
             <MudGrid Style="padding: 20px;">
                 <MudStack Spacing="0" Class="col-3">
                     <MudText Class="description">Водитель</MudText>
-                    <MudText Class="value">@(Truck.DriverName ?? "Неизвестно")</MudText>
+                    <MudText Class="value">@(Truck.Driver?.Name ?? "Неизвестно")</MudText>
                         <MudText Class="description">Гос. номер</MudText>
-                        <MudText Class="value">@Truck.Number</MudText>
+                        <MudText Class="value">@Truck.TransportNumber</MudText>
                         <MudText Class="description">Вес автомобиля</MudText>
                         <MudText Class="value">@Truck.StockWeight</MudText>
                         <MudText Class="description">Объём</MudText>

@@ -1,6 +1,7 @@
 ﻿using Communication.Configurator;
 using Database;
 using Entities;
+using Entities.Database;
 using Entities.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -156,7 +157,7 @@ namespace Communication.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         [Authorize(Roles = "User")]
-        public Task DatabaseMessageResult(Message<List<Dictionary<string, object>>> message)
+        public Task DatabaseMessageResult(Message<IEnumerable<Weighings>> message)
             => this.Clients
                    .Client(message.ConnectionId)
                    .SendAsync("DatabaseMessageResult", message);
@@ -167,7 +168,7 @@ namespace Communication.Hubs
         /// <param name="message"></param>
         /// <returns></returns>
         [Authorize(Roles = "User")]
-        public Task CarsDatabaseMessageResult(Message<List<Dictionary<string, object>>> message)
+        public Task CarsDatabaseMessageResult(Message<IEnumerable<Truck>> message)
             => this.Clients
                    .Client(message.ConnectionId)
                    .SendAsync("CarsDatabaseMessageResult", message);

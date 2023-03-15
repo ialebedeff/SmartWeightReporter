@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
+using System.Text.Json.Serialization;
 
 namespace Entities.Database
 {
@@ -8,19 +9,54 @@ namespace Entities.Database
         /// <summary>
         /// Номер автомобиля
         /// </summary>
-        [Column("transport_number")] public string Number { get; set; } = null!;
-        [Column("stock_weight")] public string? TrailerNumber { get; set; }
-        [Column("stock_weight")] public int StockWeight { get; set; }
-        [Column("max_allowed_difference")] public int MaxAllowedDifference { get; set; }
-        [Column("use_as_tara")] public bool UseAsTara { get; set; }
-        [Column("capacity")] public int Capacity { get; set; }
-        [Column("volume")] public decimal Volume { get; set; }
-        [Column("rfid")] public Blob RFID { get; set; }
-        [Column("vehicle_id")] public int VehicleId { get; set; }
-        [Column("driver_id")] public int DriverId { get; set; } 
-        [Column("is_deleted")] public bool IsDeleted { get; set; }
-        [Column("name")] public string? DriverName { get; set; }
+        public string TransportNumber { get; set; } = null!;
+        public string TrailerNumber { get; set; } = null!;
+        public int StockWeight { get; set; } 
+        public int MaxAllowedDifference { get; set; }
+        public bool UseAsTara { get; set; } 
+        public int Capacity { get; set; } 
+        public decimal Volume { get; set; }
+        public int VehicleId { get; set; }
+        public int DriverId { get; set; }
+        public Driver? Driver { get; set; }
+        public Vehicle? Vehicle { get; set; }
     }
+    public class Driver
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+    }
+    public class Brand
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        public IEnumerable<Model> Models { get; set; } = null!;
+    }
+
+    public class Vehicle
+    {
+        public int Id { get; set; }
+        public int ModelId { get; set; }
+        public Model Model { get; set; } = null!;
+        public int Height { get; set; }
+        public int Width { get; set; }
+        public int Lenght { get; set; }
+        public string? Note { get; set; }
+    }
+    public class CarType
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+    }
+    public class Model
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = null!;
+        [JsonIgnore]
+        public Brand Brand { get; set; } = null!;
+        public CarType CarType { get; set; } = null!;
+    }
+
     public class Weighings
     {
         [Column("id")] public int Id { get; set; }

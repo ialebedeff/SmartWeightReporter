@@ -1,5 +1,7 @@
 ﻿using Communication.Configurator;
+using Dapper;
 using Entities;
+using Entities.Database;
 using Microsoft.AspNetCore.SignalR.Client;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -8,10 +10,63 @@ using System.Diagnostics;
 
 namespace Communication.Client
 {
-    public partial class DatabaseMessageExecutor : MessageExecutor<DatabaseCommand, List<Dictionary<string, object>>>
+    public class DatabaseQueryExecutor
+    {
+        private static Lazy<DatabaseQueryExecutor> _instance = new Lazy<DatabaseQueryExecutor>(new DatabaseQueryExecutor());
+        public static DatabaseQueryExecutor Instance => _instance.Value;
+        private MySqlConnection? _connection;
+        public async Task<IEnumerable<TOutput>> ExecuteDatabaseCommandAsync<TOutput>(DatabaseCommand databaseCommand)
+        {
+            if (await CreateConnectionIfNotExistsAsync(databaseCommand.Connection))
+            {
+                return _connection.Query<TOutput>(databaseCommand.Command);
+            }
+
+            return Enumerable.Empty<TOutput>();
+        }
+
+        public async Task<IEnumerable<Truck>> ExecuteTrucksCommandAsync(DatabaseCommand databaseCommand)
+        {
+            if (await CreateConnectionIfNotExistsAsync(databaseCommand.Connection))
+            {
+                return _connection.Query<Truck, Driver, Truck>(databaseCommand.Command, (truck, driver) =>
+                {
+                    truck.Driver = driver;
+                    return truck; ;
+                });
+            }
+
+            return Enumerable.Empty<Truck>();
+        }
+
+        public Task<bool> CreateConnectionIfNotExistsAsync(DatabaseConnection databaseConnection)
+        {
+            if (_connection is not null && _connection.State is ConnectionState.Open)
+                return Task.FromResult(true);
+
+            if (_connection is not null && _connection.State is ConnectionState.Closed)
+                return _connection.OpenAsync().ContinueWith(task => task.IsCompletedSuccessfully);
+
+            var connectionBuild = new MySqlConnectionStringBuilder();
+
+            connectionBuild.UserID = databaseConnection.User;
+            connectionBuild.Server = databaseConnection.Server;
+            connectionBuild.Password = databaseConnection.Password;
+            connectionBuild.Database = databaseConnection.Database;
+
+            var connectionString = connectionBuild.ToString();
+
+            _connection = new MySqlConnection(connectionString);
+
+            return _connection
+                .OpenAsync()
+                .ContinueWith(task => task.IsCompletedSuccessfully);
+        }
+    }
+    public partial class DatabaseExecutor : MessageExecutor<DatabaseCommand, List<Dictionary<string, object>>>
     {
         private MySqlConnection? sqlConnection;
-        public DatabaseMessageExecutor(HubConnection hubConnection, string methodName) : base(hubConnection, methodName) 
+        public DatabaseExecutor(HubConnection hubConnection, string methodName) : base(hubConnection, methodName)
         {
         }
         public override Task<List<Dictionary<string, object>>> ExecuteAsync(Message<DatabaseCommand> databaseCommand)
@@ -20,8 +75,37 @@ namespace Communication.Client
         }
     }
 
-    public partial class DatabaseMessageExecutor
+    public class TruckDatabaseExecutor : DatabaseMessageExecutor<Truck>
     {
+        public TruckDatabaseExecutor(HubConnection hubConnection, string responseUrl) : base(hubConnection, responseUrl)
+        {
+        }
+
+        public override Task<IEnumerable<Truck>> ExecuteCommandAsync(DatabaseCommand databaseCommand)
+            => DatabaseQueryExecutor.Instance.ExecuteTrucksCommandAsync(databaseCommand);
+    }
+
+    public class WeighingsDatabaseExecutor : DatabaseMessageExecutor<Weighings>
+    {
+        public WeighingsDatabaseExecutor(HubConnection hubConnection, string responseUrl) : base(hubConnection, responseUrl)
+        {
+        }
+
+        public override Task<IEnumerable<Weighings>> ExecuteCommandAsync(DatabaseCommand databaseCommand)
+            => DatabaseQueryExecutor.Instance.ExecuteDatabaseCommandAsync<Weighings>(databaseCommand);
+    }
+
+    public partial class DatabaseExecutor
+    {
+        public async Task<IEnumerable<TOutput>> ExecuteCommandAsync<TOutput>(DatabaseCommand databaseCommand)
+        {
+            if (await CreateConnectionIfNotExistsAsync(databaseCommand.Connection))
+            {
+                return sqlConnection.Query<TOutput>(databaseCommand.Command);
+            }
+
+            return Enumerable.Empty<TOutput>();
+        }
         public async Task<List<Dictionary<string, object>>> ExecuteCommandAsync(DatabaseCommand databaseCommand)
         {
             if (await CreateConnectionIfNotExistsAsync(databaseCommand.Connection))
