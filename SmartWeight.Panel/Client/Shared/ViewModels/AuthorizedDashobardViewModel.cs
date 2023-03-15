@@ -2,6 +2,7 @@
 using Communication.Configurator;
 using Communication.Server;
 using DynamicData.Binding;
+using Entities;
 using Entities.Models;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
@@ -33,11 +34,15 @@ namespace SmartWeight.Panel.Client.Shared.ViewModels
         {
 
             LoadConnectedFactoriesCommand = ReactiveCommand.CreateFromTask(
-                _ => CommunicationService.Messages.Clients.Clients.SendMessageAsync());
+                _ => CommunicationService.Messages.ClientsHub.Clients.SendMessageAsync());
 
             this.WhenActivated(disposables =>
             {
-                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)
+                this.WhenAnyValue(x => x.CommunicationService.Messages.ClientsHub.Clients.Results)
+                    .Subscribe(results => ApplicationState.ConnectedClients = new ObservableCollectionExtended<HubClient>(results))
+                    .DisposeWith(disposables);
+
+                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionStateHub.ConnectionStates.Results)
                     .Subscribe(results => NotifyOnConnectionClientsChanged(results))
                     .DisposeWith(disposables);
 

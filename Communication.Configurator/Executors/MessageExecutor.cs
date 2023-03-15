@@ -22,7 +22,7 @@ namespace Communication.Configurator
                 .ContinueWith(task =>
                 {
                     if (task.IsCompletedSuccessfully)
-                    {
+                    {//CarsDatabaseMessageResult
                         Message<TResult> response = Message<TResult>.CreateResponse(message, task.Result);
                         using (CancellationTokenSource cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
                             HubConnection.SendAsync(MethodName, response, cancellationTokenSource.Token);

@@ -1,5 +1,4 @@
 ﻿using Communication.Configurator;
-using Communication.Hubs;
 using DynamicData.Binding;
 using Entities;
 using Entities.Database;
@@ -13,10 +12,11 @@ public class DatabaseApi
 {
     public DatabaseApi(HubConnection hubConnection)
     {
-        Weighings = new DatabaseResultMessageExecutor<Weighings>(hubConnection);
+        Weighings = new DatabaseResultMessageExecutor<Weighings>(hubConnection, "DatabaseMessageExecute");
+        Cars = new DatabaseResultMessageExecutor<Truck>(hubConnection, "CarsDatabaseMessageExecute");
     }
 
-    public DatabaseResultMessageExecutor<Car> Cars { get; set; }
+    public DatabaseResultMessageExecutor<Truck> Cars { get; set; }
     public DatabaseResultMessageExecutor<Weighings> Weighings { get; set; }
 }
 
@@ -63,29 +63,39 @@ public class ServerConfiguration : CommunicationConfiguratorBase
 
         var connection = connectionBuilder.Build();
 
-        Database = new DatabaseApi(connection);
-        Online = new OnlineApi(connection);
-        Clients = new ClientsApi(connection);
-        UserConnectionState = new UserConnectionStateApi(connection);
+        DatabaseHub = new DatabaseApi(connection);
+        OnlineHub = new OnlineApi(connection);
+        ClientsHub = new ClientsApi(connection);
+        UserConnectionStateHub = new UserConnectionStateApi(connection);
 
         connection.On<Message<IEnumerable<Dictionary<string, object>>>>("DatabaseMessageResult", message =>
         {
-            Database.Weighings.ExecuteToResultsAsync(message).ContinueWith(task =>
+            DatabaseHub.Weighings.ExecuteToResultsAsync(message).ContinueWith(task =>
             {
                 if (task.IsCompletedSuccessfully)
                 {
-                    Database.Weighings.Results = new ObservableCollectionExtended<Weighings>(task.Result);
+                    DatabaseHub.Weighings.Results = new ObservableCollectionExtended<Weighings>(task.Result);
+                }
+            });
+        });
+        connection.On<Message<IEnumerable<Dictionary<string, object>>>>("CarsDatabaseMessageResult", message =>
+        {
+            DatabaseHub.Cars.ExecuteToResultsAsync(message).ContinueWith(task =>
+            {
+                if (task.IsCompletedSuccessfully)
+                {
+                    DatabaseHub.Cars.Results = new ObservableCollectionExtended<Truck>(task.Result);
                 }
             });
         });
         //UserConnectionStateChanged
         connection.On<Message<ObservableCollection<HubClient>>>("ReceiveConnectedUsers", message =>
         {
-            Clients.Clients.Results = new ObservableCollectionExtended<HubClient>(message.Data);
+            ClientsHub.Clients.Results = new ObservableCollectionExtended<HubClient>(message.Data);
         });
         connection.On<Message<ConnectionStateChanged>>("UserConnectionStateChanged", message =>
         {
-            UserConnectionState.ConnectionStates.InsertResult(message.Data);
+            UserConnectionStateHub.ConnectionStates.InsertResult(message.Data);
         });
         return connection;
     }

@@ -1,0 +1,61 @@
+﻿@using Entities.Database;
+@using ReactiveUI.Blazor;
+@using ReactiveUI;
+@using SmartWeight.Panel.Client.Pages.Tucks.ViewModels;
+@using System.Reactive;
+
+@inherits ReactiveInjectableComponentBase<TruckViewModel>
+
+<style>
+    .description {
+        color: #ABB3B9;
+        font-size: .75rem;
+    }
+
+    .value {
+        color: #252525;
+        font-size: .85rem;
+        margin-bottom: 10px;
+    }
+
+    .square {
+        transition: transform .2s;
+        border-radius: 5px;
+        cursor: pointer;
+        min-width: 218px;
+    }
+
+        .square:hover {
+            z-index: 999;
+            animation: 0.1s;
+            transform: scale(1.06);
+        }
+</style>
+
+@if (ViewModel is not null)
+{
+    <MudItem Class="col-3 square">
+        <MudPaper Elevation="0" @onclick="@(() => ViewModel.OpenTruckDetailsCommand.Execute(Truck))" Style="padding: 30px;">
+            <MudGrid Style="padding: 20px;">
+                <MudStack Spacing="0" Class="col-3">
+                    <MudText Class="description">Водитель</MudText>
+                    <MudText Class="value">@(Truck.DriverName ?? "Неизвестно")</MudText>
+                        <MudText Class="description">Гос. номер</MudText>
+                        <MudText Class="value">@Truck.Number</MudText>
+                        <MudText Class="description">Вес автомобиля</MudText>
+                        <MudText Class="value">@Truck.StockWeight</MudText>
+                        <MudText Class="description">Объём</MudText>
+                        <MudText Class="value">@Truck.Volume</MudText>
+                        <MudText Class="description">Грузоподъёмность</MudText>
+                        <MudText Class="value">@Truck.Capacity</MudText>
+                    </MudStack>
+                    <MudImage Alt="Автомобиль" Class="col-8 truck-image" Style="min-width: 140px; opacity: 0.7;" Src="/images/truck.svg"></MudImage>
+                </MudGrid>
+            </MudPaper>
+        </MudItem>
+}
+
+@code {
+    [Parameter]
+    public Truck Truck { get; set; } = null!;
+}

@@ -45,7 +45,7 @@ namespace SmartWeight.Panel.Client.Pages.Charts
                     .Subscribe(OnLoadFailure)
                     .DisposeWith(blocks);
                 var weighingsResultObservable = this
-                    .WhenAnyValue(x => x.CommunicationService.Messages.Database.Weighings.Results)
+                    .WhenAnyValue(x => x.CommunicationService.Messages.DatabaseHub.Weighings.Results)
                     .Subscribe(result => ResultChanged(result))
                     .DisposeWith(blocks);
             });
@@ -164,7 +164,7 @@ namespace SmartWeight.Panel.Client.Pages.Charts
                     ApplicationState.CurrentFactory, 
                     ApplicationState.CurrentFactory.DatabaseConnection, Filter);
 
-                await CommunicationService.Messages.Database.Weighings.SendMessageAsync(message);
+                await CommunicationService.Messages.DatabaseHub.Weighings.SendMessageAsync(message);
             }
         }
     }

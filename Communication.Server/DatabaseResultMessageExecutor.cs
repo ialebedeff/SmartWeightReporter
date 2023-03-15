@@ -6,7 +6,7 @@ namespace Communication.Server;
 public class DatabaseResultMessageExecutor<T> : ServerMessageExecutor<IEnumerable<Dictionary<string, object>>, T>
     where T : class
 {
-    public DatabaseResultMessageExecutor(HubConnection hubConnection) : base(hubConnection, "DatabaseMessageExecute")
+    public DatabaseResultMessageExecutor(HubConnection hubConnection, string methodName) : base(hubConnection, methodName)
     {
     }
     public override Task<T> ExecuteAsync(Message<IEnumerable<Dictionary<string, object>>> message)

@@ -45,7 +45,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
                     .Subscribe(result => this.RaisePropertyChanged(nameof(IsSelectionDisabled)))
                     .DisposeWith(disposables);
 
-                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)
+                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionStateHub.ConnectionStates.Results)
                     .Subscribe(result => 
                     {
                         var connectionState = result.FirstOrDefault();
@@ -63,7 +63,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
                     .DisposeWith(disposables);
 
                 // Подписка на коллекцию клиентов
-                this.WhenAnyValue(x => x.CommunicationService.Messages.Clients.Clients.Results)
+                this.WhenAnyValue(x => x.CommunicationService.Messages.ClientsHub.Clients.Results)
                     .Subscribe(result => ApplicationState.ConnectedClients = result)
                     .DisposeWith(disposables);
 
@@ -171,7 +171,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
         /// </summary>
         /// <returns></returns>
         private Task RequestToConnectedClientsAsync()
-            => CommunicationService.Messages.Clients.Clients.SendMessageAsync();
+            => CommunicationService.Messages.ClientsHub.Clients.SendMessageAsync();
         /// <summary>
         /// Выбранные производства / производство
         /// </summary>

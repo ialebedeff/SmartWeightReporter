@@ -18,10 +18,10 @@
                        Edge="Edge.Start"
                        OnClick="DrawerToggle" />
         </MudAppBar>
-        <MudDrawer @bind-Open="_drawerOpen">
-            <MudPaper Width="250px" Class="py-3" Elevation="0">
+        <MudDrawer @bind-Open="_drawerOpen" DisableOverlay="true" Elevation="0">
+            <MudPaper Class="py-3" Elevation="0">
                 <MudNavMenu Dense="true" Rounded="true" Bordered="false" Margin="Margin.Dense" Color="Color.Secondary" Class="pa-2">
-                    <MudNavLink Href="/applications" Icon="@Icons.Material.Filled.BarChart">Графики</MudNavLink>
+                    <MudNavLink Href="/charts" Icon="@Icons.Material.Filled.BarChart">Графики</MudNavLink>
                     <MudNavLink Href="/trucks" Icon="@Icons.Material.Filled.FireTruck">Автомобили</MudNavLink>
                     <MudNavLink Href="/logout" Icon="@Icons.Material.Filled.Logout">Выход</MudNavLink>
                 </MudNavMenu>

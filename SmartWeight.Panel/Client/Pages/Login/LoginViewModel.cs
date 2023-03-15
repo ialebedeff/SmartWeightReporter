@@ -7,6 +7,7 @@ using MudBlazor;
 using ReactiveUI;
 using SmartWeight.Updater.API;
 using System.Reactive;
+using System.Threading.Tasks;
 
 namespace SmartWeight.Panel.Client.Pages.Login
 {
@@ -32,11 +33,23 @@ namespace SmartWeight.Panel.Client.Pages.Login
         {
             _authenticationState = authenticationStateProvider;
 
-            OnLoginSuccessObserver = Observer.Create<Unit>(_ => RedirectAsync());
+            CheckAuthenticationStateCommand = ReactiveCommand.CreateFromTask<Unit, AuthenticationState>(_ => GetAuthenticationStateAsync());
+            CheckAuthenticationStateCommand
+                .Execute()
+                .Subscribe(async state =>
+                {
+                    if (state.User.Identity is not null)
+                    if (state.User.Identity.IsAuthenticated)
+                    {
+                        await RedirectAsync(state);
+                    }
+                });
+
             LoginCommand = ReactiveCommand.CreateFromTask(LoginAsync);
             LoginCommand.ThrownExceptions.Subscribe(OnFailure);
-            LoginCommand.Subscribe(OnLoginSuccessObserver);
+            LoginCommand.Subscribe(_ => RedirectAsync());
         }
+        public ReactiveCommand<Unit, AuthenticationState> CheckAuthenticationStateCommand { get; set; }
         /// <summary>
         /// Обработка успешной авторизации
         /// </summary>
@@ -100,22 +113,37 @@ namespace SmartWeight.Panel.Client.Pages.Login
         /// в зависимости от его роли
         /// </summary>
         /// <returns></returns>
-        public Task RedirectAsync()
+        public async Task RedirectAsync(AuthenticationState? state = null)
         {
-            return _authenticationState
-                .GetAuthenticationStateAsync()
-                .ContinueWith(task =>
+            if (state is null)
+            {
+                await _authenticationState
+                    .GetAuthenticationStateAsync()
+                    .ContinueWith(task =>
+                    {
+                        if (task.IsCompletedSuccessfully)
+                        {
+                            ApplicationState.AuthenticationState = task.Result;
+                        }
+                        if (task.Result.User.IsInRole("Admin"))
+                        {
+                            Navigation.NavigateTo("/factories");
+                        }
+                        else { Navigation.NavigateTo("/select/factories"); }
+                    });
+            }
+            else
+            {
+                if (state.User.IsInRole("Admin"))
                 {
-                    if (task.IsCompletedSuccessfully)
-                    {
-                        ApplicationState.AuthenticationState = task.Result;
-                    }
-                    if (task.Result.User.IsInRole("Admin"))
-                    {
-                        Navigation.NavigateTo("/factories");
-                    }
-                    else { Navigation.NavigateTo("/select/factories"); }
-                });
+                    Navigation.NavigateTo("/factories");
+                }
+                else 
+                { Navigation.NavigateTo("/select/factories"); }
+            }
         }
+
+        private Task<AuthenticationState> GetAuthenticationStateAsync()
+            => ApiClients.Server.Authorization.GetAuthenticationStateAsync();
     }
 }

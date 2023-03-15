@@ -53,7 +53,7 @@ namespace SmartWeight.Panel.Client.Pages.WeighingsData
                         .DisposeWith(disposables);
 
                 var weighingsResultObservable = this
-                        .WhenAnyValue(x => x.CommunicationService.Messages.Database.Weighings.Results)
+                        .WhenAnyValue(x => x.CommunicationService.Messages.DatabaseHub.Weighings.Results)
                         .Subscribe(results => OnResultsChanged(results))
                         .DisposeWith(disposables);
             });
@@ -120,7 +120,7 @@ namespace SmartWeight.Panel.Client.Pages.WeighingsData
             if (Factory is not null)
             {
                 var message = DatabaseMessageFactory.CreateSelectWeighingsCommand(Factory, Factory.DatabaseConnection, Filter);
-                await CommunicationService.Messages.Database.Weighings.SendMessageAsync(message);
+                await CommunicationService.Messages.DatabaseHub.Weighings.SendMessageAsync(message);
             }
         }
         /// <summary>

@@ -2,6 +2,7 @@
 using Entities;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.Net;
+using System.Text.Json;
 
 namespace Communication.Client
 {
@@ -11,6 +12,7 @@ namespace Communication.Client
     public class ClientConfiguration : CommunicationConfiguratorBase
     {
         public DatabaseMessageExecutor? WeighingsExecutor { get; set; }
+        public DatabaseMessageExecutor? WorkCarsExecutor { get; set; }
         public override HubConnection Configure(string url, CookieContainer? cookieContainer = null)
         {
             var connectionBuilder = new HubConnectionBuilder()
@@ -24,15 +26,18 @@ namespace Communication.Client
 
             var connection = connectionBuilder.Build();
 
-            WeighingsExecutor = new DatabaseMessageExecutor(connection);
+            WeighingsExecutor = new DatabaseMessageExecutor(connection, "DatabaseMessageResult");
+            WorkCarsExecutor= new DatabaseMessageExecutor(connection, "CarsDatabaseMessageResult");
 
             connection.On<Message<DatabaseCommand>>("DatabaseMessageExecute", message =>
             {
+                Console.WriteLine("{0} сообщение: {1}", "DatabaseMessageExecute", JsonSerializer.Serialize(message));
                 WeighingsExecutor.ExecuteResultAsync(message);
             });
             connection.On<Message<DatabaseCommand>>("CarsDatabaseMessageExecute", message =>
             {
-                WeighingsExecutor.ExecuteResultAsync(message);
+                Console.WriteLine("{0} сообщение: {1}", "CarsDatabaseMessageExecute", JsonSerializer.Serialize(message));
+                WorkCarsExecutor.ExecuteResultAsync(message);
             });
 
             return connection;
@@ -42,7 +47,7 @@ namespace Communication.Client
         {
             var connection = Configure(url);
 
-            WeighingsExecutor = new DatabaseMessageExecutor(connection);
+            WeighingsExecutor = new DatabaseMessageExecutor(connection, "");
 
             configuration.Invoke(connection);
 

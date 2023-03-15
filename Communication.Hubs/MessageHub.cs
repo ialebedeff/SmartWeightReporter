@@ -141,7 +141,15 @@ namespace Communication.Hubs
         /// <returns></returns>
         [Authorize(Roles = "User")]
         public Task DatabaseMessageExecute(Message<DatabaseCommand> message)
-            => this.SendToClientAsync("DatabaseMessageExecute", message);
+            => this.SendToClientAsync("DatabaseMessageExecute", message); 
+        /// <summary>
+        /// Отправить сообщение с SQL командой клиенту 
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "User")]
+        public Task CarsDatabaseMessageExecute(Message<DatabaseCommand> message)
+            => this.SendToClientAsync("CarsDatabaseMessageExecute", message); //CarsDatabaseMessageExecute
         /// <summary>
         /// Отправить сообщение с результатом выполнения SQL команды
         /// </summary>
@@ -152,6 +160,17 @@ namespace Communication.Hubs
             => this.Clients
                    .Client(message.ConnectionId)
                    .SendAsync("DatabaseMessageResult", message);
+        /// <summary>
+        /// Отправить сообщение с результатом выполнения 
+        /// SQL-команды к таблице work_cars
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "User")]
+        public Task CarsDatabaseMessageResult(Message<List<Dictionary<string, object>>> message)
+            => this.Clients
+                   .Client(message.ConnectionId)
+                   .SendAsync("CarsDatabaseMessageResult", message);
         /// <summary>
         /// Отправить сообщение клиенту
         /// </summary>

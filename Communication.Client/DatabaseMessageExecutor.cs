@@ -11,9 +11,6 @@ namespace Communication.Client
     public partial class DatabaseMessageExecutor : MessageExecutor<DatabaseCommand, List<Dictionary<string, object>>>
     {
         private MySqlConnection? sqlConnection;
-        public DatabaseMessageExecutor(HubConnection hubConnection) : base(hubConnection, "DatabaseMessageResult")
-        {
-        }
         public DatabaseMessageExecutor(HubConnection hubConnection, string methodName) : base(hubConnection, methodName) 
         {
         }

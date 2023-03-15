@@ -61,14 +61,25 @@ namespace Communication.Configurator
             var command = new DatabaseCommand(to);
             var database = to.DatabaseConnection.Database;
 
-            command
-                .Select()
-                .All()
-                .From()
-                .Database(database)
-                .Table("work_cars");
+            command.Command = $"SELECT * FROM {database}.work_cars as car " +
+                               "LEFT JOIN drivers as driver " +
+                               "ON driver.id = car.driver_id;";
 
             return CreateMessage(to, command);
+        }
+
+        public Message<DatabaseCommand> CreateSearchWorkCarsCommand(
+            string query, Factory factory)
+        {
+            var command = new DatabaseCommand(factory);
+            var database = factory.DatabaseConnection.Database;
+
+            command.Command = $"SELECT * FROM {database}.work_cars as car " +
+                               "LEFT JOIN drivers as driver " +
+                               "ON driver.id = car.driver_id " +
+                              $"WHERE car.transport_number LIKE \"%{query}%\";";
+
+            return CreateMessage(factory, command);
         }
     }
 

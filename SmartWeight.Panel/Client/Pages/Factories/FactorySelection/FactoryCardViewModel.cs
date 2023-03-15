@@ -18,7 +18,7 @@ namespace SmartWeight.Panel.Client.Pages.Factories.FactorySelection
         {
             this.WhenActivated(disposables =>
             {
-                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionState.ConnectionStates.Results)
+                this.WhenAnyValue(x => x.CommunicationService.Messages.UserConnectionStateHub.ConnectionStates.Results)
                     .Subscribe(_ => this.RaisePropertyChanged(nameof(IsOnline)))
                     .DisposeWith(disposables);
                 this.WhenAnyValue(x => x.ApplicationState.ConnectedClients)

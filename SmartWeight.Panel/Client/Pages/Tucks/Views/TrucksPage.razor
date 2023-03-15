@@ -1,6 +1,52 @@
-﻿@using ReactiveUI.Blazor;
+﻿@using Entities.Database;
+@using Entities;
+@using ReactiveUI.Blazor;
 @using SmartWeight.Panel.Client.Pages.Tucks.ViewModels;
+@using SmartWeight.Panel.Client.Shared;
 
 @page "/trucks";
+@layout AuthorizedDashboardLayout;
 @inherits ReactiveInjectableComponentBase<TrucksViewModel>
 
+@if (ViewModel is not null)
+{
+    <MudPaper Elevation="0" Style="padding: 20px; margin-top: 20px; margin-bottom: 20px;">
+        <MudTextField @bind-Text="ViewModel.TransportNumber" Immediate="true" Variant="Variant.Outlined" Label="Гос. номер автомобиля" T="string">
+
+        </MudTextField>
+    </MudPaper>
+
+    <MudGrid>
+        @if (ViewModel.Cars is not null &&
+       ViewModel.Cars.Count() is not 0)
+        {
+            @foreach (var truck in ViewModel.Cars)
+            {
+                <TruckCard Truck="truck"></TruckCard>
+            }
+        }
+        else
+        {
+            @for (int i = 0; i < 8; i += 1)
+            {
+                <MudItem Class="col-3" Style="height: 25%; min-width: 218px; margin-bottom: 5px; border-radius: 25px;">
+                    <MudSkeleton Height="250px;" SkeletonType="SkeletonType.Rectangle" Animation="Animation.Pulse" Style="border-radius: 25px;"></MudSkeleton>
+                </MudItem>
+            }
+        }
+    </MudGrid>
+}
+@code
+{
+    protected override void OnInitialized()
+    {
+        this.ViewModel?.Activator.Activate();
+        base.OnInitialized();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        this.ViewModel?.Activator.Deactivate();
+        base.Dispose(disposing);
+    }
+}

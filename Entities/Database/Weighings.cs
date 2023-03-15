@@ -3,7 +3,7 @@ using System.Reflection.Metadata;
 
 namespace Entities.Database
 {
-    public class Car
+    public class Truck
     {
         /// <summary>
         /// Номер автомобиля
@@ -18,7 +18,8 @@ namespace Entities.Database
         [Column("rfid")] public Blob RFID { get; set; }
         [Column("vehicle_id")] public int VehicleId { get; set; }
         [Column("driver_id")] public int DriverId { get; set; } 
-        [Column("is_deleted")] public bool IsDeleted { get; set; } 
+        [Column("is_deleted")] public bool IsDeleted { get; set; }
+        [Column("name")] public string? DriverName { get; set; }
     }
     public class Weighings
     {
